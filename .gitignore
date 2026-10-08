@@ -1,5 +1,6 @@
 .turbo/
 node_modules/
+.idea/
 apps/desktop/dist-electron/
 apps/desktop/electron/generated/
 apps/desktop/.electron-runtime/
