@@ -9,7 +9,7 @@
     "den:contract": "node scripts/den-contract.mjs",
     "hooks:install": "node scripts/install-git-hooks.mjs",
     "test:contracts": "pnpm --filter @openwork-ee/den-api test:contract-tools",
-    "dev": "node ./scripts/dev-env.mjs OPENWORK_DEV_MODE=1 -- pnpm --filter @openwork/desktop dev",
+    "dev": "node ./scripts/copy-better-sqlite3-prebuilt.mjs && node ./scripts/dev-env.mjs OPENWORK_DEV_MODE=1 OPENWORK_ELECTRON_SKIP_NATIVE_REBUILD=1 -- pnpm --filter @openwork/desktop dev",
     "dev:worktree": "node ./scripts/dev-env.mjs OPENWORK_DEV_MODE=1 OPENWORK_DEV_PROFILE=auto OPENWORK_ELECTRON_USE_MOCK_KEYCHAIN=1 OPENWORK_ELECTRON_REMOTE_DEBUG_PORT=0 PORT=0 -- pnpm --filter @openwork/desktop dev",
     "dev:electron": "node ./scripts/dev-env.mjs OPENWORK_DEV_MODE=1 -- pnpm --filter @openwork/desktop dev:electron",
     "dev:sandbox": "bash .devcontainer/dev-sandbox.sh",
