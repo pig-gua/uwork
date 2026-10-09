@@ -201,7 +201,7 @@ export function getGlobalSettingsTabs(
   developerMode: boolean,
   capabilities: Pick<PlatformCapabilities, "autoUpdate">,
 ): SettingsTab[] {
-  const tabs: SettingsTab[] = ["ai", "ollama", "appearance", "shortcuts", "environment"];
+  const tabs: SettingsTab[] = ["ai", /* "ollama", */ "appearance", "shortcuts", "environment"];
   if (capabilities.autoUpdate) tabs.push("updates");
   if (developerMode) tabs.push("debug");
   return tabs;
