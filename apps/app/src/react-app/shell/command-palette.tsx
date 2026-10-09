@@ -396,7 +396,7 @@ export function CommandPalette(props: CommandPaletteProps) {
     ...(props.onOpenAutomations
       ? [{
           id: "automations.open",
-          title: "Automations",
+          title: t("sidebar.automations"),
           keywords: ["schedule", "scheduled", "recurring", "cron", "daily", "weekly"],
           group: ACTIONS_GROUP,
           action: () => {
@@ -408,7 +408,7 @@ export function CommandPalette(props: CommandPaletteProps) {
     ...(props.onOpenDashboard
       ? [{
           id: "dashboard.open",
-          title: "Dashboard",
+          title: t("sidebar.dashboard"),
           keywords: ["home", "overview", "apps"],
           group: ACTIONS_GROUP,
           action: () => {

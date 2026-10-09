@@ -796,7 +796,7 @@ export function AppSidebar(props: AppSidebarProps) {
               <SidebarDestination
                 active={props.dashboardActive === true}
                 icon={Blocks}
-                label="Dashboard"
+                label={t("sidebar.dashboard")}
                 onSelect={props.onOpenDashboard}
               />
             ) : null}
@@ -804,15 +804,15 @@ export function AppSidebar(props: AppSidebarProps) {
               <SidebarDestination
                 active={props.automationsActive === true}
                 icon={Clock3}
-                label="Automations"
+                label={t("sidebar.automations")}
                 labelContent={(
                   <span className="flex min-w-0 flex-1 items-center gap-2">
-                    <span className="truncate">Automations</span>
+                    <span className="truncate">{t("sidebar.automations")}</span>
                     {props.automationsNeedAttention ? (
                       <AlertTriangle
                         data-automations-attention-indicator
                         className="ml-auto size-3.5 shrink-0 text-warning"
-                        aria-label="An Automation needs attention"
+                        aria-label={t("sidebar.automation_needs_attention")}
                       />
                     ) : null}
                   </span>
