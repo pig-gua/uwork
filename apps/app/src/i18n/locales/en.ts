@@ -450,6 +450,7 @@ export default {
   "config.workspace_config_title": "Workspace config",
   "config.workspace_id_prefix": "Workspace:",
   "context_panel.add_button": "Add",
+  "context_panel.add_folder": "Add folder",
   "context_panel.add_folder_hint": "Add a folder to let this workspace read and edit files outside its root directory.",
   "context_panel.adding_button": "Adding...",
   "context_panel.always_available": "Workspace root folder can't be removed",
