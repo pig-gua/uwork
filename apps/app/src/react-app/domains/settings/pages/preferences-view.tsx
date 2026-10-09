@@ -58,6 +58,7 @@ function desktopNotificationPreferenceLabel(value: DesktopNotificationPreference
 }
 
 export function PreferencesView(props: PreferencesViewProps) {
+  const sectionGroupClass = "rounded-2xl border border-dls-border bg-dls-surface p-4 gap-4";
   const linkDestinationItems = [
     { value: "openwork", label: "OpenWork" },
     { value: "external", label: t("settings.links.external") },
@@ -69,7 +70,7 @@ export function PreferencesView(props: PreferencesViewProps) {
 
   return (
     <LayoutStack>
-      <LayoutSection>
+      <LayoutSection className={sectionGroupClass}>
         <LayoutSectionHeader>
           <LayoutSectionTitle>{t("settings.model_title")}</LayoutSectionTitle>
           <LayoutSectionDescription>{t("settings.model_section_desc")}</LayoutSectionDescription>
@@ -108,7 +109,7 @@ export function PreferencesView(props: PreferencesViewProps) {
         </LayoutSectionItem>
       </LayoutSection>
 
-      <LayoutSection>
+      <LayoutSection className={sectionGroupClass}>
         <LayoutSectionHeader>
           <LayoutSectionTitle>{t("settings.desktop_notifications.title")}</LayoutSectionTitle>
           <LayoutSectionDescription>{t("settings.desktop_notifications.section_desc")}</LayoutSectionDescription>
@@ -152,7 +153,7 @@ export function PreferencesView(props: PreferencesViewProps) {
       <DesktopIntegrationSection />
 
       {isElectronRuntime() ? (
-        <LayoutSection>
+        <LayoutSection className={sectionGroupClass}>
           <LayoutSectionHeader>
             <LayoutSectionTitle>{t("settings.browser_title")}</LayoutSectionTitle>
             <LayoutSectionDescription>{t("settings.browser_section_desc")}</LayoutSectionDescription>
@@ -187,7 +188,7 @@ export function PreferencesView(props: PreferencesViewProps) {
         </LayoutSection>
       ) : null}
 
-      <LayoutSection>
+      {/* <LayoutSection>
         <LayoutSectionHeader>
           <LayoutSectionTitle>{t("settings.privacy_title")}</LayoutSectionTitle>
           <LayoutSectionDescription>{t("settings.privacy_section_desc")}</LayoutSectionDescription>
@@ -207,7 +208,7 @@ export function PreferencesView(props: PreferencesViewProps) {
             </LayoutSectionItemHeaderActions>
           </LayoutSectionItemHeader>
         </LayoutSectionItem>
-      </LayoutSection>
+      </LayoutSection> */}
 
     </LayoutStack>
   );
