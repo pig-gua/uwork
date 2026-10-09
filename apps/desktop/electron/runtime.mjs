@@ -1582,6 +1582,10 @@ export function createRuntimeManager({
       env.OPENCODE_CONFIG_DIR = devPaths.opencodeConfigDir;
       env.OPENCODE_TEST_HOME = devPaths.homeDir;
     }
+    // Offline model catalog: never fetch models.dev, use the engine's
+    // bundled/cached snapshot. Custom providers from opencode.json are
+    // unaffected. Applied last so no inherited env can re-enable it.
+    env.OPENCODE_DISABLE_MODELS_FETCH = "1";
     return env;
   }
 
