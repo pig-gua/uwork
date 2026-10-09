@@ -105,7 +105,7 @@ export function AiSettingsView(props: AiSettingsViewProps) {
   const local = props.connectedProviders.filter((provider) => !managed(provider) && provider.id !== AUTO_PROVIDER_ID && !isKeylessZenProvider(provider));
   const organization = props.connectedProviders.filter(managed);
   const disabled = props.onEnableProvider ? props.disabledProviders ?? [] : [];
-  const showAuto = !props.autoSwitchedOff && Boolean(props.autoPreferences || props.connectedProviders.some((provider) => provider.id === AUTO_PROVIDER_ID));
+  const showAuto = false;
   const autoOff = props.autoPreferences?.enabled === false;
   const autoAvailable = props.autoPreferences?.available ?? ready;
   const locked = !props.canAddProviders;

@@ -2722,6 +2722,12 @@ or use: pnpm dev:worktree`);
       if (ensureDefaultOpencodeConfig()) {
         console.log("[opencode] seeded default opencode.json");
       }
+      if (process.env.OPENWORK_DEV_MODE === "1" && process.env.OPENWORK_DEV_SHARED_STATE !== "1") {
+        const devConfigDir = path.join(app.getPath("userData"), "openwork-dev-data", "config", "opencode");
+        if (ensureDefaultOpencodeConfig(devConfigDir)) {
+          console.log("[opencode] seeded dev-mode opencode.json");
+        }
+      }
     } catch (error) {
       console.warn("[opencode] failed to seed default opencode.json", error);
     }

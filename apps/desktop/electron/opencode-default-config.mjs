@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { globalOpencodeConfigDir } from "@openwork/paths";
@@ -42,15 +42,35 @@ const DEFAULT_PROVIDERS = {
   },
 };
 
-export function ensureDefaultOpencodeConfig() {
-  const dir = globalOpencodeConfigDir();
+export function ensureDefaultOpencodeConfig(targetDir) {
+  const dir = targetDir ?? globalOpencodeConfigDir();
   const jsonc = path.join(dir, "opencode.jsonc");
   const json = path.join(dir, "opencode.json");
-  if (existsSync(jsonc) || existsSync(json)) return false;
+  const enabledProviders = Object.keys(DEFAULT_PROVIDERS);
+
+  if (existsSync(jsonc)) return false;
+
+  if (existsSync(json)) {
+    // Existing install: merge enabled_providers without touching the rest.
+    try {
+      const existing = JSON.parse(readFileSync(json, "utf8"));
+      const current = Array.isArray(existing.enabled_providers)
+        ? existing.enabled_providers
+        : null;
+      const merged = [...new Set([...(current ?? []), ...enabledProviders])];
+      if (current && merged.length === current.length) return false;
+      existing.enabled_providers = merged;
+      writeFileSync(json, `${JSON.stringify(existing, null, 2)}\n`, "utf8");
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
   const config = {
     $schema: "https://opencode.ai/config.json",
     model: "volcengine-agent-plan/ark-code-latest",
+    enabled_providers: enabledProviders,
     provider: DEFAULT_PROVIDERS,
   };
   mkdirSync(dir, { recursive: true });
