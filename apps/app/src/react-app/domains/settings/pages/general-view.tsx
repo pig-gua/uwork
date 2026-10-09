@@ -1,13 +1,11 @@
 /** @jsxImportSource react */
 import {
   ArrowRight,
-  ArrowUpRight,
   Cloud,
   Cog,
   FolderLock,
+  Gauge,
   Keyboard,
-  LifeBuoy,
-  MessageCircle,
   Paintbrush,
   RefreshCcw,
   Sparkles,
@@ -17,7 +15,6 @@ import {
 
 import { t } from "../../../../i18n";
 import type { SettingsTab } from "../../../../app/types";
-import { Button } from "@/components/ui/button";
 
 export type GeneralSettingsViewProps = {
   onNavigateTab: (tab: SettingsTab) => void;
@@ -27,32 +24,33 @@ export type GeneralSettingsViewProps = {
   onReportIssue: () => void;
 };
 
-type SettingsCardDefinition = { tab: SettingsTab; icon: typeof Sparkles } & (
-  | { title: string; desc: string }
-  | { titleKey: string; descKey: string }
-);
+type SettingsCardDefinition = { tab: SettingsTab; icon: typeof Sparkles; titleKey: string; descKey: string };
 
 const workspaceCards: SettingsCardDefinition[] = [
-  { tab: "preferences", icon: Cog, title: "Preferences", desc: "Default model, reasoning, and compaction." },
-  { tab: "permissions", icon: FolderLock, title: "Permissions", desc: "Authorized folders and file access." },
-  { tab: "advanced", icon: Wrench, title: "Advanced", desc: "Runtime, engine, recovery, and developer options." },
+  { tab: "preferences", icon: Cog, titleKey: "settings.tab_preferences", descKey: "settings.tab_description_preferences" },
+  { tab: "permissions", icon: FolderLock, titleKey: "settings.tab_permissions", descKey: "settings.tab_description_permissions" },
+  { tab: "advanced", icon: Wrench, titleKey: "settings.tab_advanced", descKey: "settings.tab_description_advanced" },
 ];
 
 const globalCards: SettingsCardDefinition[] = [
-  { tab: "ai", icon: Sparkles, title: "AI Providers", desc: "Connect services that provide AI models." },
-  { tab: "cloud-account", icon: Cloud, title: "Cloud", desc: "OpenWork Cloud account and organization." },
-  { tab: "appearance", icon: Paintbrush, title: "Appearance", desc: "Theme, font size, and display." },
-  { tab: "shortcuts", icon: Keyboard, title: "Keyboard shortcuts", desc: "Keys that switch to your saved models." },
-  { tab: "environment", icon: Terminal, title: "Environment", desc: "Environment variables and paths." },
-  { tab: "updates", icon: RefreshCcw, title: "Updates", desc: "App version and update channel." },
+  { tab: "ai", icon: Sparkles, titleKey: "settings.tab_ai", descKey: "settings.tab_description_ai" },
+  { tab: "appearance", icon: Paintbrush, titleKey: "settings.tab_appearance", descKey: "settings.tab_description_appearance" },
+  { tab: "shortcuts", icon: Keyboard, titleKey: "settings.tab_shortcuts", descKey: "settings.tab_description_shortcuts" },
+  { tab: "environment", icon: Terminal, titleKey: "settings.tab_environment", descKey: "settings.tab_description_environment" },
+  { tab: "updates", icon: RefreshCcw, titleKey: "settings.tab_updates", descKey: "settings.tab_description_updates" },
+];
+
+const cloudCards: SettingsCardDefinition[] = [
+  { tab: "cloud-account", icon: Cloud, titleKey: "settings.tab_cloud_account", descKey: "settings.tab_description_cloud_account" },
+  { tab: "usage", icon: Gauge, titleKey: "settings.tab_usage", descKey: "settings.tab_description_usage" },
 ];
 
 function cardTitle(card: SettingsCardDefinition) {
-  return "titleKey" in card ? t(card.titleKey) : card.title;
+  return t(card.titleKey);
 }
 
 function cardDescription(card: SettingsCardDefinition) {
-  return "descKey" in card ? t(card.descKey) : card.desc;
+  return t(card.descKey);
 }
 
 function SettingsCard(props: {
@@ -85,7 +83,7 @@ export function GeneralSettingsView(props: GeneralSettingsViewProps) {
       {/* Workspace settings */}
       <div className="space-y-3">
         <div className="text-[11px] font-semibold uppercase tracking-[0.15em] text-dls-secondary">
-          Workspace
+          {t("settings.group_workspace")}
         </div>
         <div className="grid grid-cols-2 gap-2">
           {workspaceCards.map((card) => (
@@ -103,7 +101,7 @@ export function GeneralSettingsView(props: GeneralSettingsViewProps) {
       {/* Global settings */}
       <div className="space-y-3">
         <div className="text-[11px] font-semibold uppercase tracking-[0.15em] text-dls-secondary">
-          Global
+          {t("settings.group_global")}
         </div>
         <div className="grid grid-cols-2 gap-2">
           {globalCards.map((card) => (
@@ -118,7 +116,25 @@ export function GeneralSettingsView(props: GeneralSettingsViewProps) {
         </div>
       </div>
 
-      {/* Feedback */}
+      {/* Cloud settings */}
+      <div className="space-y-3">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.15em] text-dls-secondary">
+          {t("settings.group_cloud")}
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {cloudCards.map((card) => (
+            <SettingsCard
+              key={card.tab}
+              icon={card.icon}
+              title={cardTitle(card)}
+              desc={cardDescription(card)}
+              onClick={() => props.onNavigateTab(card.tab)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Help
       <div className="space-y-3">
         <div className="text-[11px] font-semibold uppercase tracking-[0.15em] text-dls-secondary">
           Help
@@ -162,6 +178,7 @@ export function GeneralSettingsView(props: GeneralSettingsViewProps) {
           </div>
         </div>
       </div>
+      */}
     </div>
   );
 }
