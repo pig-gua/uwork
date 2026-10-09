@@ -792,7 +792,7 @@ export function AppSidebar(props: AppSidebarProps) {
                 </kbd>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            {props.onOpenDashboard ? (
+            {/* {props.onOpenDashboard ? (
               <SidebarDestination
                 active={props.dashboardActive === true}
                 icon={Blocks}
@@ -819,7 +819,7 @@ export function AppSidebar(props: AppSidebarProps) {
                 )}
                 onSelect={props.onOpenAutomations}
               />
-            ) : null}
+            ) : null} */}
             <SidebarDestination
               active={props.extensionsActive === true}
               icon={LayoutGrid}
