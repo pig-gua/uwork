@@ -19,6 +19,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { globalOpencodeConfigDir, workspaceOpencodeConfigCandidates } from "@openwork/paths";
+import { ensureDefaultOpencodeConfig } from "./opencode-default-config.mjs";
 
 import { configureFakeMediaForTests, installMediaPermissionHandlers } from "./media-permissions.mjs";
 import { registerMigrationIpc } from "./migration.mjs";
@@ -2715,6 +2716,15 @@ or use: pnpm dev:worktree`);
       await applyDesktopBootstrapBrandIcon(bootstrapConfig, applyBrandIconUrl);
     }
     applicationMenu.install();
+    // Seed the global OpenCode config on first launch so the engine starts
+    // with the bundled providers. Never overwrites an existing config.
+    try {
+      if (ensureDefaultOpencodeConfig()) {
+        console.log("[opencode] seeded default opencode.json");
+      }
+    } catch (error) {
+      console.warn("[opencode] failed to seed default opencode.json", error);
+    }
     if (!desktopActivationRequired(DESKTOP_DISTRIBUTION, bootstrapConfig)) {
       await runtimeManager.prepareFreshRuntime().catch(() => undefined);
     }
