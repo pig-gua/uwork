@@ -2157,6 +2157,8 @@ export default {
   "settings.updates_not_supported": "此环境不支持更新。",
   "settings.updates_title": "更新",
   "settings.window_appearance_desc": "自定义窗口外观。",
+  "settings.window_menu_bar": "显示菜单栏",
+  "settings.window_menu_bar_desc": "显示桌面原生菜单栏。",
   "settings.window_title": "窗口外观",
   "settings.worker_id_label": "工作区{id}",
   "settings.worker_unresolved": "工作区{runtimeWorkspaceId}",

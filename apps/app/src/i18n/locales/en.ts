@@ -2155,6 +2155,8 @@ export default {
   "settings.updates_not_supported": "Updates are not supported in this environment.",
   "settings.updates_title": "Updates",
   "settings.window_appearance_desc": "Customize window appearance.",
+  "settings.window_menu_bar": "Display menu bar",
+  "settings.window_menu_bar_desc": "Show the native desktop menu bar.",
   "settings.window_title": "Window appearance",
   "settings.worker_id_label": "Worker {id}",
   "settings.worker_unresolved": "Worker {runtimeWorkspaceId}",
