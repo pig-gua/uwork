@@ -55,5 +55,6 @@
     "electron": "^43.7.5",
     "electron-builder": "^26.15.3"
   },
-  "packageManager": "pnpm@10.27.0"
+  "packageManager": "pnpm@10.27.0",
+  "homepage": "https://github.com/pig-gua/uwork"
 }
