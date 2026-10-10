@@ -13,18 +13,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  select:
+    name: Select targets
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.pick.outputs.matrix }}
+    steps:
+      - id: pick
+        env:
+          TARGETS: ${{ inputs.targets }}
+        run: |
+          set -euo pipefail
+          all='[
+            { "key": "windows", "name": "windows-x64", "os": "windows-latest" },
+            { "key": "macos", "name": "macos-arm64", "os": "macos-14" },
+            { "key": "linux", "name": "linux-x64", "os": "ubuntu-24.04" },
+            { "key": "linux-arm64", "name": "linux-arm64", "os": "ubuntu-24.04-arm" }
+          ]'
+          if [ "$TARGETS" = "all" ]; then
+            selected="$all"
+          else
+            selected="$(echo "$all" | jq -c --arg targets "$TARGETS" '
+              ($targets | split(",")) as $wanted
+              | map(select(.key as $k | $wanted | any(. == $k)))
+            ')"
+          fi
+          if [ "$selected" = "[]" ]; then
+            echo "No valid targets in: $TARGETS" >&2
+            exit 1
+          fi
+          echo "matrix={\"include\": $(echo "$selected" | jq -c .)}" >> "$GITHUB_OUTPUT"
+
   package:
     name: Package ${{ matrix.name }}
+    needs: select
     runs-on: ${{ matrix.os }}
-    if: ${{ contains(inputs.targets, matrix.key) || inputs.targets == 'all' }}
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - { key: windows, name: windows-x64, os: windows-latest }
-          - { key: macos, name: macos-arm64, os: macos-14 }
-          - { key: linux, name: linux-x64, os: ubuntu-24.04 }
-          - { key: linux-arm64, name: linux-arm64, os: ubuntu-24.04-arm }
+      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
 
     steps:
       - name: Checkout
