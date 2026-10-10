@@ -74,6 +74,11 @@ jobs:
         with:
           bun-version: 1.3.10
 
+      # Lockfile pins better-sqlite3 as a git dependency; pnpm clones it via
+      # SSH by default, which fails on runners without a key. Rewrite to HTTPS.
+      - name: Rewrite GitHub SSH URLs to HTTPS
+        run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
