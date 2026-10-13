@@ -7,6 +7,7 @@ import {
   ChevronUp,
   LogOut,
   MessageCircleMore,
+  MessageCircleQuestion,
   MoreHorizontal,
   Settings,
   Sparkles,
@@ -58,7 +59,9 @@ import {
   useOpenWorkModelsPromoEligibility,
 } from "../../cloud/openwork-models-promo";
 
-const DOCS_URL = "https://openworklabs.com/docs";
+const DOCS_URL = "http://127.0.0.1:8899/docs.html";
+const FAQ_URL = "http://127.0.0.1:8899/faq.html";
+const LOGIN_URL = "http://127.0.0.1:8899/login.html";
 const BOOT_STARTED_AT = Date.now();
 const INITIALIZING_MS = 15_000;
 
@@ -236,6 +239,7 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
 
   const openSettings = props.onOpenAccountSettings;
   const openDocs = useCallback(() => platform.openLink(DOCS_URL), [platform]);
+  const openFaq = useCallback(() => platform.openLink(FAQ_URL), [platform]);
   // When the organization blocks settings control, the settings surface is the
   // Cloud account page only, so the entry is labelled for where it lands and
   // the Debug shortcut is hidden.
@@ -313,8 +317,7 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
   const showStatus = shellConfig.statusBar && (runtimeStatus !== null || connectStatus !== null);
 
   const openSignIn = () => {
-    markDesktopSignInInitiated();
-    platform.openLink(buildDenAuthUrl(readDenBootstrapConfig().baseUrl, "sign-up"));
+    platform.openLink(LOGIN_URL);
   };
 
   const submitPastedCode = async () => {
@@ -511,12 +514,20 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
             {t("status.docs")}
           </DropdownMenuItem>
         ) : null}
+        {shellConfig.docsButton ? (
+          <DropdownMenuItem onClick={openFaq}>
+            <MessageCircleQuestion className="size-3.5" />
+            {t("status.faq")}
+          </DropdownMenuItem>
+        ) : null}
+        {/* Feedback entry removed
         {shellConfig.feedbackButton && props.onSendFeedback ? (
           <DropdownMenuItem onClick={props.onSendFeedback}>
             <MessageCircleMore className="size-3.5" />
             {t("status.feedback")}
           </DropdownMenuItem>
         ) : null}
+        */}
         {signedIn ? (
           <DropdownMenuItem onClick={logOut}>
             <LogOut className="size-3.5" />
@@ -536,7 +547,7 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
             >
               <span className="inline-flex min-w-0 items-center gap-2">
                 <UserRound className="size-3.5" />
-                <span className="truncate">Sign in to OpenWork Cloud</span>
+                <span className="truncate">{t("sidebar.sign_in_cloud")}</span>
               </span>
               <ArrowUpRight className="size-3.5" />
             </Button>
