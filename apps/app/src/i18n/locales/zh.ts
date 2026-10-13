@@ -2190,6 +2190,8 @@ export default {
   "sidebar.collapse": "收起",
   "sidebar.dashboard": "仪表盘",
   "sidebar.expand": "展开",
+  "sidebar.sign_in": "登录",
+  "sidebar.sign_in_sync": "使用统一认证登录",
   "shortcuts.add_model_shortcut": "添加模型快捷键",
   "shortcuts.all_models_group": "全部模型",
   "shortcuts.blocked_by_org": "已被你的组织阻止",

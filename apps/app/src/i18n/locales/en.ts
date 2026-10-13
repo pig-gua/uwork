@@ -2188,6 +2188,8 @@ export default {
   "sidebar.collapse": "Collapse",
   "sidebar.dashboard": "Dashboard",
   "sidebar.expand": "Expand",
+  "sidebar.sign_in": "Sign in",
+  "sidebar.sign_in_sync": "Sync with OpenWork Cloud",
   "shortcuts.add_model_shortcut": "Add model shortcut",
   "shortcuts.all_models_group": "All models",
   "shortcuts.blocked_by_org": "Blocked by your organization",
