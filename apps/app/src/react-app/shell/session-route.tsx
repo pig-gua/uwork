@@ -3500,7 +3500,7 @@ export function SessionRoute() {
           });
         }
         const home = await getDesktopHomeDir().catch(() => "");
-        const folder = home ? await joinDesktopPath(home, "OpenWork Chat").catch(() => "") : "";
+        const folder = home ? await joinDesktopPath(home, "UWork Chat").catch(() => "") : "";
         if (!folder) throw new Error("Choose a workspace before retrying this message.");
         await handleCreateWorkspace("starter", folder, undefined, (workspace) => { prepared = workspace; });
       }
