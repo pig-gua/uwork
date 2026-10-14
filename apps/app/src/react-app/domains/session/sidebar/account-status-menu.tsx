@@ -170,10 +170,8 @@ export function resolveCollapsedStatus(
 
 function accountInitials(name: string | null, email: string) {
   const source = name?.trim() || email;
-  const parts = source.split(/[\s@._-]+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[1][0]).toUpperCase();
+  const first = Array.from(source)[0];
+  return first ? first.toUpperCase() : "?";
 }
 
 function useOpenWorkModelsPromoVisible(hasOpenWorkModels: boolean) {
@@ -408,13 +406,9 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
         {signedIn ? (
           <div className="px-2 py-1.5 text-[11px] text-muted-foreground">{user.email}</div>
         ) : null}
-        {signedIn ? (
-          <>
-            <GatewayUsageMenuItem key={`${denAuth.verifiedIdentity?.organizationId}:${user.id}`} />
-            <DropdownMenuSeparator />
-          </>
-        ) : null}
+        {/* Usage menu item hidden */}
 
+        {/* status warning box hidden
         {showStatus ? (
           <div className="mx-1 mb-1 flex flex-col gap-2 rounded-lg bg-muted/50 p-2">
             {props.developerMode ? (
@@ -475,13 +469,9 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
             ) : null}
           </div>
         ) : null}
+        */}
 
-        {connectNeedsAttention && !controlSettingsBlocked ? (
-          <DropdownMenuItem onClick={() => navigate("/settings/debug")}>
-            <Stethoscope className="size-3.5" />
-            Run diagnostics
-          </DropdownMenuItem>
-        ) : null}
+        {/* Run diagnostics hidden */}
         {promoVisible ? (
           <DropdownMenuItem
             onClick={() => {
@@ -500,7 +490,7 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
             </span>
           </DropdownMenuItem>
         ) : null}
-        {(connectNeedsAttention && !controlSettingsBlocked) || promoVisible ? <DropdownMenuSeparator /> : null}
+        {/* separator for diagnostics/promo hidden */}
 
         {props.showSettingsButton !== false ? (
           <DropdownMenuItem onClick={openSettings}>
@@ -531,7 +521,7 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
         {signedIn ? (
           <DropdownMenuItem onClick={logOut}>
             <LogOut className="size-3.5" />
-            Log out
+            {t("account.log_out")}
           </DropdownMenuItem>
         ) : restoringSession ? null : (
           <div

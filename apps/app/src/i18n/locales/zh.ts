@@ -7,6 +7,7 @@
  */
 
 export default {
+  "account.log_out": "退出登录",
   "account.mcp_connected_one": "{count} 个 MCP 服务器",
   "account.mcp_connected_other": "{count} 个 MCP 服务器",
   "account.providers_connected_one": "{count} 个模型提供商",

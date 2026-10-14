@@ -4,6 +4,7 @@
  */
 
 export default {
+  "account.log_out": "Log out",
   "account.mcp_connected_one": "{count} MCP server",
   "account.mcp_connected_other": "{count} MCP servers",
   "account.providers_connected_one": "{count} model provider",
