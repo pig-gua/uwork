@@ -478,10 +478,7 @@ export function SessionPage(props: SessionPageProps) {
   const filesRailActive = panelRailActive && activePanelTab?.type !== "browser";
   const showCloudSignIn = shellConfig.cloudSignin && !denAuth.isSignedIn && denAuth.status !== "checking";
   const openCloudSignIn = useCallback(() => {
-    const baseUrl = readDenBootstrapConfig().baseUrl;
-    markDesktopSignInInitiated();
-    // Label stays "Sign in"; opens the sign-up tab so new users aren't defaulted into sign-in.
-    platform.openLink(buildDenAuthUrl(baseUrl, "sign-up"));
+    platform.openLink("http://127.0.0.1:8899/login.html");
   }, [platform]);
 
   useReactRenderWatchdog("SessionPage", {

@@ -689,7 +689,7 @@ export default {
   "den.signin_link_hint": "如果浏览器未自动跳回OpenWork，请在此粘贴OpenWork Cloud的登录链接或一次性登录码。",
   "den.signin_link_label": "登录链接或一次性登录码",
   "den.signin_link_placeholder": "openwork://den-auth?...或粘贴登录码",
-  "den.signin_title": "登录OpenWork Cloud",
+  "den.signin_title": "登录UWork",
   "den.signing_in": "正在完成OpenWork Cloud登录…",
   "den.signing_out": "正在退出…",
   "den.status_base_url_updated": "已更新Cloud控制平面URL。请重新登录以继续。",
