@@ -86,6 +86,14 @@ export function resolveOpenWorkConnectStatus(
     };
   }
 
+  // A cloud endpoint that is not a valid http(s) /mcp/agent URL is a local
+  // configuration matter, not a service problem: stay silent instead of
+  // painting the account row with the attention dot.
+  if ((maintenance.status === "failed" || maintenance.status === "skipped")
+    && maintenance.issue?.code === "cloud_endpoint_invalid") {
+    return null;
+  }
+
   if (maintenance.status === "failed" || maintenance.status === "skipped") {
     return {
       state: "needs_attention",
