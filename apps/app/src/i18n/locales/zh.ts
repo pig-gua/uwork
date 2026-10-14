@@ -2191,6 +2191,7 @@ export default {
   "sidebar.dashboard": "仪表盘",
   "sidebar.expand": "展开",
   "sidebar.sign_in": "登录",
+  "sidebar.cloud_detail": "UWork 云服务",
   "sidebar.sign_in_cloud": "登录UWork",
   "sidebar.sign_in_sync": "使用统一认证登录",
   "shortcuts.add_model_shortcut": "添加模型快捷键",

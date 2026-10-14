@@ -291,11 +291,11 @@ export function AccountStatusMenu(props: AccountStatusMenuProps) {
   });
   const accountLabel = signedIn
     ? user.name?.trim() || user.email
-    : restoringSession ? "OpenWork Cloud" : t("sidebar.sign_in");
+    : restoringSession ? t("sidebar.cloud_detail") : t("sidebar.sign_in");
   // The sidebar row shows the name only; the email stays inside the account
   // menu so it is not permanently on screen (matches Claude Code and Codex).
   const accountDetail = signedIn
-    ? "OpenWork Cloud"
+    ? t("sidebar.cloud_detail")
     : restoringSession ? "Restoring your session" : t("sidebar.sign_in_sync");
 
   const runtimeStatus = props.showConnectionStatus
