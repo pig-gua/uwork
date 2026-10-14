@@ -212,7 +212,7 @@ export function AdvancedOrganizationServerSection(props: AdvancedOrganizationSer
 
       <LayoutSectionItem>
         <ControlPlaneUrlEditor
-          disabled={controlsDisabled}
+          disabled
           hint={t("settings.organization_server_url_hint")}
           label={t("settings.organization_server_url_label")}
           onReset={props.onResetBaseUrlToDefault}
@@ -220,7 +220,7 @@ export function AdvancedOrganizationServerSection(props: AdvancedOrganizationSer
           onValueChange={props.onBaseUrlDraftChange}
           placeholder={DEFAULT_DEN_BASE_URL}
           resetLabel={t("common.reset")}
-          saveDisabled={!isValidControlPlaneUrl(customUrl)}
+          saveDisabled
           saveLabel={t("common.save")}
           value={customUrl}
         />
@@ -236,7 +236,7 @@ export function AdvancedOrganizationServerSection(props: AdvancedOrganizationSer
               variant={clearConfirming ? "destructive" : "outline"}
               size="sm"
               onClick={clearServerConfiguration}
-              disabled={controlsDisabled}
+              disabled
             >
               {clearConfirming
                 ? t("den.cloud_control_plane_clear_confirm")
