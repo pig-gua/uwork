@@ -522,6 +522,12 @@ export function OrgOnboardingPage() {
 
     return () => {
       cancelled = true;
+      // Allow the re-run that follows this cleanup to restart the request:
+      // otherwise the in-flight guard outlives the cancelled attempt and no
+      // retry is ever scheduled, leaving the page stuck on the spinner.
+      if (autoSelectingOrgIdRef.current === autoSelectOrg.id) {
+        autoSelectingOrgIdRef.current = null;
+      }
     };
   }, [authToken, autoSelectOrg, denClient, settings]);
 
