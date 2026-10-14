@@ -1210,7 +1210,7 @@ function forwardedDeepLinks(argv) {
     .filter(
       (entry) =>
         entry.startsWith(`${DESKTOP_PROTOCOL_SCHEME}://`) ||
-        (!app.isPackaged && entry.startsWith("openwork-dev://")) ||
+        (!app.isPackaged && entry.startsWith("uwork-dev://")) ||
         entry.startsWith("https://") ||
         entry.startsWith("http://"),
     );

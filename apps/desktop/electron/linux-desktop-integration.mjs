@@ -19,7 +19,7 @@ import path from "node:path";
 
 export const OPENWORK_DESKTOP_ID = "com.differentai.openwork.desktop";
 export const OPENWORK_DESKTOP_NAME = "com.differentai.openwork";
-export const OPENWORK_PROTOCOL_MIME = "x-scheme-handler/openwork";
+export const OPENWORK_PROTOCOL_MIME = "x-scheme-handler/uwork";
 
 const INTEGRATION_STATE_VERSION = 1;
 const OWNERSHIP_MARKER = "X-OpenWork-Managed";

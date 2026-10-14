@@ -4,7 +4,7 @@ productName: OpenWork
 protocols:
   - name: OpenWork
     schemes:
-      - openwork
+      - uwork
 linux:
   executableName: openwork
 artifactName: openwork-${os}-${arch}-${version}.${ext}

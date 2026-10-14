@@ -816,7 +816,7 @@ export function createBrowserPanel({ getWindow, remoteDebugPort, onDeepLink, che
       if (target === "about:blank" || target.startsWith("data:")) return;
       // Intercept openwork:// deep links (e.g. den-auth handoff grants) so
       // in-app browser auth works without the system protocol handler.
-      if (target.startsWith("openwork://") || target.startsWith("openwork-dev://")) {
+      if (target.startsWith("uwork://") || target.startsWith("uwork-dev://")) {
         if (typeof onDeepLink === "function") {
           onDeepLink([target]);
         }
