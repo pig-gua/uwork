@@ -16,7 +16,9 @@ import { isManagedPolicyPlugin } from "./managed-policy-plugin.js";
  * runtime-DB write — unlike the previous OPENCODE_CONFIG_CONTENT env var,
  * which was frozen at spawn and reverted MCP state on each dispose.
  */
+import { readFileSync } from "node:fs";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { homedir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import {
@@ -58,6 +60,18 @@ export async function buildOpenworkRuntimeConfigObject(
   return buildOpenworkRuntimeConfigObjectFromSnapshot(runtimeConfig);
 }
 
+function localUserConfigProviderIds(): string[] {
+  try {
+    const dir = process.env.OPENCODE_CONFIG_DIR?.trim()
+      || join(homedir(), ".config", "opencode");
+    const parsed: unknown = JSON.parse(readFileSync(join(dir, "opencode.json"), "utf8"));
+    if (!parsed || typeof parsed !== "object") return [];
+    const provider = (parsed as Record<string, unknown>).provider;
+    return provider && typeof provider === "object" ? Object.keys(provider) : [];
+  } catch {
+    return [];
+  }
+}
 export function buildOpenworkRuntimeConfigObjectFromSnapshot(
   runtimeConfig: RuntimeOpencodeConfig,
 ): Record<string, unknown> {
@@ -71,8 +85,14 @@ export function buildOpenworkRuntimeConfigObjectFromSnapshot(
   const permissions = legacyExecutionPermissions(runtimeConfig.managedPolicy?.execution);
   const { managedPolicy: _managedPolicy, ...engineConfig } = runtimeConfig;
   const provider = materializeLegacyFastProviders(runtimeProviderMap(runtimeConfig));
+  // Provider whitelist: org-issued providers (materialized into the runtime
+  // store) plus the providers from the user's own opencode.json. Anything
+  // else — notably environment-inferred providers — is excluded by the
+  // engine's enabled_providers whitelist semantics.
+  const enabledProviders = [...new Set([...Object.keys(provider), ...localUserConfigProviderIds()])];
   return {
     ...engineConfig,
+    enabled_providers: enabledProviders,
     ...(runtimeConfig.managedPolicy?.allowCustomProviders === false ? { enabled_providers: [
       ...Object.keys(provider).filter((id) => /^(?:lpr_|ipr_|openwork$)/i.test(id)),
       ...(runtimeConfig.managedPolicy.allowZenModel !== false ? ["opencode"] : []),
