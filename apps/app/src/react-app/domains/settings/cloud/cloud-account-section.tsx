@@ -1,10 +1,7 @@
 /** @jsxImportSource react */
 import { ArrowUpRight, Building2, Check, LogOut, Loader2 } from "lucide-react";
 
-import {
-  formatDenOrgRoleLabel,
-  type DenOrgSummary,
-} from "../../../../app/lib/den";
+import { type DenOrgSummary } from "../../../../app/lib/den";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,6 +11,22 @@ import {
 import { t } from "@/i18n";
 import { useCloudSession } from "./cloud-session-provider";
 import { useOrgListWindow } from "../../cloud/use-org-list-window";
+
+function translatedOrgRoleLabel(roleValue: string): string {
+  return roleValue
+    .split(",")
+    .map((role) => role.trim())
+    .filter(Boolean)
+    .map((role) => {
+      const normalized = role.toLowerCase().replace(/[\s_]+/g, "-");
+      if (normalized === "super-admin") return t("account.role_super_admin");
+      if (normalized === "owner") return t("account.role_owner");
+      if (normalized === "admin") return t("account.role_admin");
+      if (normalized === "member") return t("account.role_member");
+      return role;
+    })
+    .join(", ");
+}
 
 export interface CloudAccountSectionProps {
   activeOrgId: string;
@@ -99,7 +112,7 @@ export function CloudAccountSection({
       ) : orgsBusy ? (
         <div className="flex items-center gap-2 text-sm text-dls-secondary">
           <Loader2 size={14} className="animate-spin" />
-          Loading organizations...
+          {t("account.loading_orgs")}
         </div>
       ) : null}
 
@@ -121,7 +134,7 @@ function ConnectedOrg({ org }: { org: DenOrgSummary }) {
       <div className="min-w-0 flex-1">
         <div className="text-sm font-medium text-dls-text">{org.name}</div>
         <div className="text-xs text-dls-secondary">
-          {formatDenOrgRoleLabel(org.role)} &middot; Connected
+          {translatedOrgRoleLabel(org.role)} &middot; {t("account.connected")}
         </div>
       </div>
       <Check size={16} className="shrink-0 text-green-11" />
@@ -153,7 +166,7 @@ function OrgPicker({
     return (
       <div className="flex flex-col items-center gap-3 py-6 text-sm text-dls-secondary">
         <Loader2 size={20} className="animate-spin" />
-        Loading your organizations...
+        {t("account.loading_your_orgs")}
       </div>
     );
   }
@@ -161,13 +174,13 @@ function OrgPicker({
   if (orgs.length === 0) {
     return (
       <div className="rounded-xl border border-dls-border bg-dls-surface px-4 py-6 text-center text-sm text-dls-secondary">
-        No organizations found.{" "}
+        {t("account.no_orgs")}{" "}
         <button
           type="button"
           className="font-medium text-dls-text underline underline-offset-2"
           onClick={() => void onRefresh()}
         >
-          Refresh
+          {t("account.refresh")}
         </button>
       </div>
     );
@@ -176,15 +189,15 @@ function OrgPicker({
   return (
     <div className="flex flex-col gap-3">
       <div className="text-sm font-medium text-dls-text">
-        Select an organization
+        {t("account.select_org_title")}
       </div>
       <div className="text-xs text-dls-secondary">
-        Choose the organization to use with this workspace. Sign out to switch later.
+        {t("account.select_org_desc")}
       </div>
       {orgs.length > 10 ? (
         <Input
-          aria-label="Search organizations"
-          placeholder="Search organizations..."
+          aria-label={t("account.search_orgs")}
+          placeholder={t("account.search_orgs")}
           value={query}
           className="h-auto rounded-xl border-dls-border bg-dls-surface px-4 py-2.5 text-sm text-dls-text shadow-none placeholder:text-dls-secondary focus-visible:border-dls-text/30 focus-visible:ring-0 dark:bg-dls-surface"
           onChange={(event) => updateQuery(event.target.value)}
@@ -205,7 +218,7 @@ function OrgPicker({
             <div className="min-w-0 flex-1">
               <div className="text-sm font-medium text-dls-text">{org.name}</div>
               <div className="text-xs text-dls-secondary">
-                {formatDenOrgRoleLabel(org.role)}
+                {translatedOrgRoleLabel(org.role)}
               </div>
             </div>
           </button>
@@ -213,7 +226,7 @@ function OrgPicker({
       </div>
       {filtered.length === 0 && query.trim() ? (
         <div className="text-sm text-dls-secondary">
-          No organizations match your search.
+          {t("account.no_orgs_match")}
         </div>
       ) : null}
       {hasMore ? (
@@ -225,10 +238,10 @@ function OrgPicker({
             className="rounded-xl border-dls-border text-dls-text hover:bg-dls-hover"
             onClick={showMore}
           >
-            Show more
+            {t("account.show_more")}
           </Button>
           <div className="text-xs text-dls-secondary">
-            Showing {visible.length} of {filtered.length} organizations
+            {t("account.showing_count", { visible: visible.length, total: filtered.length })}
           </div>
         </div>
       ) : null}
