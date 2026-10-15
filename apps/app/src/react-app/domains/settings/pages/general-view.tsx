@@ -42,7 +42,7 @@ const globalCards: SettingsCardDefinition[] = [
 
 const cloudCards: SettingsCardDefinition[] = [
   { tab: "cloud-account", icon: Cloud, titleKey: "settings.tab_cloud_account", descKey: "settings.tab_description_cloud_account" },
-  { tab: "usage", icon: Gauge, titleKey: "settings.tab_usage", descKey: "settings.tab_description_usage" },
+  // { tab: "usage", icon: Gauge, titleKey: "settings.tab_usage", descKey: "settings.tab_description_usage" },
 ];
 
 function cardTitle(card: SettingsCardDefinition) {
