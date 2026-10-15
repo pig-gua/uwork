@@ -1586,6 +1586,9 @@ export function createRuntimeManager({
     // bundled/cached snapshot. Custom providers from opencode.json are
     // unaffected. Applied last so no inherited env can re-enable it.
     env.OPENCODE_DISABLE_MODELS_FETCH = "1";
+    // No OpenWork free/auto inference (Big Pickle, Exo Free, etc.): only
+    // org-issued providers and the user's own opencode.json providers run.
+    env.OPENWORK_DISABLE_FREE_INFERENCE = "1";
     return env;
   }
 
