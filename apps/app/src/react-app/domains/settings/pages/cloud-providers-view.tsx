@@ -147,8 +147,8 @@ export function CloudProvidersView({
         reloadPending: serverSync?.reloadPending === true,
       });
       const providerDetail = provider.source === "openwork"
-        ? `Organization credential · ${provider.models.length ? `${provider.models.length} models` : "All models"}`
-        : `${imported?.source === "openwork_gateway" ? "OpenWork Gateway" : "Organization credential"} · ${provider.credentialMode === "per_member" ? "Each member signs in" : "Shared org key"}`;
+        ? `${t("cloud_providers.org_credential")} · ${provider.models.length ? t("cloud_providers.models_count", { count: provider.models.length }) : t("cloud_providers.all_models")}`
+        : `${imported?.source === "openwork_gateway" ? "UWork Gateway" : t("cloud_providers.org_credential")} · ${provider.credentialMode === "per_member" ? t("cloud_providers.per_member") : t("cloud_providers.shared_key")}`;
       const detail = status === "blocked"
         ? t("den.cloud_provider_blocked")
         : status === "unavailable"
@@ -175,12 +175,12 @@ export function CloudProvidersView({
     const importedRows: CloudProviderRow[] = Object.values(importedCloudProviders).filter((provider) => !cloudOrgProviders.some((live) => live.id === provider.cloudProviderId)).map((provider) => ({
       key: `imported:${provider.cloudProviderId}`, cloudProviderId: provider.cloudProviderId, provider: null, imported: provider, name: provider.name,
       status: resolveCloudProviderRowStatus({ imported: true, outOfSync: false, allowed: isProviderAllowedByDesktopPolicy({ providerId: provider.providerId, restrictToCloud, checkRestriction: checkDesktopAppRestriction }), importsUnavailable, needsCredential: false, needsServer: false, syncError: null, reloadPending: serverSync?.reloadPending, skippedByServer: Boolean(serverSync?.skippedProviders[provider.cloudProviderId]) }),
-      detail: provider.source === "openwork_gateway" ? "OpenWork Gateway · Organization credential" : "Managed in Den",
+      detail: provider.source === "openwork_gateway" ? `UWork Gateway · ${t("cloud_providers.org_credential")}` : t("cloud_providers.managed_badge"),
       metaId: provider.cloudProviderId,
       credentialReady: true,
     }));
     const combined = [...liveRows, ...importedRows];
-    return combined.filter((row) => !gatewayConnectProviders.some((provider) => provider.cloudProviderId === row.cloudProviderId)).map<CloudProviderRow>((row) => serverSync?.lastRun?.status === "failed" ? { ...row, status: "unavailable", detail: "Could not verify with Den. Sync again to check access." } : row);
+    return combined.filter((row) => !gatewayConnectProviders.some((provider) => provider.cloudProviderId === row.cloudProviderId)).map<CloudProviderRow>((row) => serverSync?.lastRun?.status === "failed" ? { ...row, status: "unavailable", detail: t("cloud_providers.verify_failed") } : row);
   }, [
     checkDesktopAppRestriction,
     cloudOrgProviders,
@@ -233,7 +233,7 @@ export function CloudProvidersView({
       <section className="flex flex-col gap-3" aria-labelledby="ai-providers-organization">
         <div className="space-y-1">
           <h2 id="ai-providers-organization" className="text-base font-medium text-dls-text">From your organization</h2>
-          <p className="text-sm text-muted-foreground">Providers your team pays for, delivered through the OpenWork Gateway. Nothing to set up on this device.</p>
+          <p className="text-sm text-muted-foreground">Providers your team pays for, delivered through the UWork Gateway. Nothing to set up on this device.</p>
         </div>
         <div className="flex flex-col gap-4 rounded-2xl border border-dashed border-dls-border px-5 py-5 sm:flex-row sm:items-center">
           <div className="flex shrink-0 items-center -space-x-2" aria-hidden>

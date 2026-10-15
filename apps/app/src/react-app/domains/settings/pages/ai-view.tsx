@@ -178,15 +178,15 @@ export function AiSettingsView(props: AiSettingsViewProps) {
       {props.providerDisconnectError ? <SettingsNotice tone="error">{props.providerDisconnectError}</SettingsNotice> : null}
     </section>
 
-    {/* {props.cloudProvidersView ?? (organization.length || props.gatewayConnectProviders?.length ? <section className="flex flex-col gap-3">
+    {props.cloudProvidersView ?? (organization.length || props.gatewayConnectProviders?.length ? <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-base font-medium text-dls-text">From {props.organizationName || "your organization"}</h2>
         {props.onOpenDen ? <Button variant="ghost" onClick={props.onOpenDen}>Open in Den</Button> : null}
       </div>
       <ProviderList>
-        {organization.map((provider) => <ProviderRow key={provider.id} scope="organization" tile={<ProviderTile providerId={provider.id} name={provider.name} />} name={provider.name} status={<ProviderStatus tone="ready">Ready to use</ProviderStatus>} meta={<ProviderMeta id={provider.id} parts={["Managed in Den"]} />} />)}
+        {organization.map((provider) => <ProviderRow key={provider.id} scope="organization" tile={<ProviderTile providerId={provider.id} name={provider.name} />} name={provider.name} status={<ProviderStatus tone="ready">{t("cloud_providers.ready")}</ProviderStatus>} meta={<ProviderMeta id={provider.id} parts={[t("cloud_providers.managed_badge")]} />} />)}
         {props.gatewayConnectProviders?.map((provider) => <GatewayConnectRow key={gatewayConnectProviderKey(provider)} provider={provider} busy={props.connectingGatewayProviderId === gatewayConnectProviderKey(provider)} onConnect={props.onConnectGatewayProvider} onCancel={props.onCancelGatewayConnect} />)}
       </ProviderList>
-    </section> : null)} */}
+    </section> : null)}
   </LayoutStack>;
 }

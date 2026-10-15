@@ -198,7 +198,7 @@ interface CloudProviderListItemProps {
 function cloudProviderRowStatus(status: CloudProviderRowStatus) {
   switch (status) {
     case "connected":
-      return <ProviderStatus tone="ready">Ready to use</ProviderStatus>;
+      return <ProviderStatus tone="ready">{t("cloud_providers.ready")}</ProviderStatus>;
     case "error":
     case "conflict":
       return <ProviderStatus tone="error">{cloudProviderStatusLabel(status)}</ProviderStatus>;
@@ -263,15 +263,15 @@ export function CloudProvidersSection({ actionError, actionId, busy, rows, onRef
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1">
           {activeOrgName ? <OrganizationMark name={activeOrgName} /> : null}
-          <h2 id="ai-providers-organization" className="min-w-0 truncate text-base font-medium text-dls-text">From {organizationName}</h2>
-          <span className="shrink-0 rounded-full bg-blue-3 px-2 py-0.5 text-xs font-medium text-blue-11">Managed in Den</span>
+          <h2 id="ai-providers-organization" className="min-w-0 truncate text-base font-medium text-dls-text">{t("cloud_providers.from_org", { org: organizationName })}</h2>
+          <span className="shrink-0 rounded-full bg-blue-3 px-2 py-0.5 text-xs font-medium text-blue-11">{t("cloud_providers.managed_badge")}</span>
         </div>
         <div className="-mr-2 flex shrink-0 items-center gap-1">
-          {onOpenModelConnections ? <Button variant="ghost" size="sm" onClick={onOpenModelConnections}>My model connections</Button> : null}
-          {onOpenDen ? <Button variant="ghost" size="sm" onClick={onOpenDen}>Open in Den<ArrowUpRight className="size-3.5" aria-hidden /></Button> : null}
+          {/* My model connections hidden */ false && onOpenModelConnections ? <Button variant="ghost" size="sm" onClick={onOpenModelConnections}>My model connections</Button> : null}
+          {/* Open in Den hidden */ false && onOpenDen ? <Button variant="ghost" size="sm" onClick={onOpenDen}>Open in Den<ArrowUpRight className="size-3.5" aria-hidden /></Button> : null}
         </div>
       </div>
-      <p className="text-sm text-muted-foreground">Your organization pays for and manages these. Members call them through the OpenWork Gateway; upstream credentials never reach this device.</p>
+      <p className="text-sm text-muted-foreground">{t("cloud_providers.section_desc")}</p>
     </div>
     {actionError ? <SettingsNotice tone="error">{actionError}</SettingsNotice> : null}
     {busy && !providerCount ? <div role="status" aria-label="Loading organization providers" className="grid gap-2">{[0, 1].map((key) => <div key={key} className="h-16 animate-pulse rounded-2xl bg-muted" />)}</div> : null}
@@ -280,8 +280,8 @@ export function CloudProvidersSection({ actionError, actionId, busy, rows, onRef
       {rows.map((row) => <CloudProviderListItem key={row.key} actionId={actionId} row={row} onRetry={onRetry} />)}
       {additionalRows}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-dls-surface-muted px-4 py-2.5 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-2"><RefreshCcw className="size-3.5" aria-hidden />{timestamp ? `Synced with Den ${timestamp}` : "Not synced with Den yet"} · {providerCount === 1 ? "1 provider" : `${providerCount} providers`}, {credentialCount === 1 ? "1 credential" : `${credentialCount} credentials`}</span>
-        <Button variant="ghost" size="sm" disabled={busy || !hasActiveOrg} onClick={() => void onRefresh()}>{busy ? "Syncing…" : "Sync now"}</Button>
+        <span className="inline-flex items-center gap-2"><RefreshCcw className="size-3.5" aria-hidden />{timestamp ? t("cloud_providers.synced_at", { time: timestamp }) : t("cloud_providers.not_synced")} · {t("cloud_providers.provider_count", { count: providerCount })}, {t("cloud_providers.credential_count", { count: credentialCount })}</span>
+        <Button variant="ghost" size="sm" disabled={busy || !hasActiveOrg} onClick={() => void onRefresh()}>{busy ? t("cloud_providers.syncing") : t("cloud_providers.sync_now")}</Button>
       </div>
     </ProviderList> : null}
   </section>;
