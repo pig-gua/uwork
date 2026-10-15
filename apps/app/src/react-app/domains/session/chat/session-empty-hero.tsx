@@ -35,24 +35,24 @@ type HeroSuggestion = {
 
 const DEFAULT_SUGGESTIONS: HeroSuggestion[] = [
   {
-    title: "Summarize my week",
-    description: "Pull highlights from email and calendar.",
-    prompt: "Summarize my week: pull the highlights from my connected email and calendar and give me a short digest of what happened and what needs my attention.",
+    title: "总结我的一周",
+    description: "从邮件和日历中提取重点。",
+    prompt: "总结我的一周：从我连接的邮件和日历中提取重点，给我一份简短的摘要，说明发生了什么以及需要我关注什么。",
   },
   {
-    title: "Clean up a spreadsheet",
-    description: "Drop in a CSV and describe the result you want.",
-    prompt: "Create a sample CSV file with 20 rows of fake customer data (name, email, company, revenue). Then show me a summary of the data.",
+    title: "整理电子表格",
+    description: "放入一个 CSV 并描述你想要的结果。",
+    prompt: "创建一个包含 20 行模拟客户数据（姓名、邮箱、公司、收入）的 CSV 示例文件，然后向我展示数据的汇总分析。",
   },
   {
-    title: "Draft a document",
-    description: "Reports, emails, or briefs from a few bullet points.",
-    prompt: "Draft a one-page project brief. Ask me for the bullet points you need, then turn them into a clear, well-structured document.",
+    title: "起草一份文档",
+    description: "根据几个要点生成报告、邮件或简报。",
+    prompt: "起草一份一页的项目简报。先向我询问所需的要点，然后把它们整理成一份清晰、结构良好的文档。",
   },
   {
-    title: "Automate a web task",
-    description: "Use the built-in browser for repetitive steps.",
-    prompt: "Open craigslist.org in the browser and search for couches for sale. Show me the top 5 results with prices.",
+    title: "自动化网页任务",
+    description: "使用内置浏览器完成重复性操作。",
+    prompt: "在浏览器中打开一个示例网站，搜索指定内容，并向我展示前 5 条结果及其关键信息。",
   },
 ];
 
@@ -203,11 +203,24 @@ export function SessionEmptyHero(props: SessionEmptyHeroProps) {
   };
 
   return (
-    <div data-chat-empty-hero className="mx-auto flex w-full max-w-[640px] flex-col gap-6 px-4 max-lg:h-full max-lg:min-h-0 max-lg:gap-4 max-lg:overflow-y-auto max-lg:px-3 max-lg:pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-6">
-      <div data-empty-greeting hidden={hideIntroduction} className="text-center max-lg:pt-6">
-        <h2 className="text-lg font-medium tracking-tight text-foreground">
-          What do you need done?
+    <div data-chat-empty-hero className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-6 self-stretch px-4 max-lg:h-full max-lg:min-h-0 max-lg:justify-start max-lg:gap-4 max-lg:overflow-y-auto max-lg:px-3 max-lg:pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-6">
+      <div data-empty-greeting hidden={hideIntroduction} className="mb-8 text-center max-lg:mb-4 max-lg:pt-6">
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <span className="text-green-500">U</span>Work 我帮你
         </h2>
+      </div>
+
+      <div data-empty-suggestions hidden={hideIntroduction} className={hideIntroduction ? "hidden" : "grid gap-2 sm:grid-cols-2"}>
+        {suggestions.map((suggestion) => (
+          <DescriptiveButton
+            key={suggestion.title}
+            className="min-h-10 items-center rounded-xl bg-background px-3 py-2 text-foreground hover:border-foreground/20 hover:bg-muted/60 max-lg:min-h-11"
+            aria-label={`${suggestion.title}: ${suggestion.description}`}
+            onClick={() => fillPrompt(suggestion.prompt)}
+          >
+            <DescriptiveButtonTitle>{suggestion.title}</DescriptiveButtonTitle>
+          </DescriptiveButton>
+        ))}
       </div>
 
       <div ref={composerDockRef} onFocusCapture={() => setComposing(true)} data-empty-composer-dock className="max-lg:sticky max-lg:bottom-0 max-lg:order-last max-lg:mt-auto max-lg:shrink-0 max-lg:bg-dls-surface">
@@ -260,19 +273,6 @@ export function SessionEmptyHero(props: SessionEmptyHeroProps) {
           </div>
         </button>
       ) : null}
-
-      <div data-empty-suggestions hidden={hideIntroduction} className={hideIntroduction ? "hidden" : "grid gap-2 sm:grid-cols-2"}>
-        {suggestions.map((suggestion) => (
-          <DescriptiveButton
-            key={suggestion.title}
-            className="min-h-10 items-center rounded-xl bg-background px-3 py-2 text-foreground hover:border-foreground/20 hover:bg-muted/60 max-lg:min-h-11"
-            aria-label={`${suggestion.title}: ${suggestion.description}`}
-            onClick={() => fillPrompt(suggestion.prompt)}
-          >
-            <DescriptiveButtonTitle>{suggestion.title}</DescriptiveButtonTitle>
-          </DescriptiveButton>
-        ))}
-      </div>
     </div>
   );
 }

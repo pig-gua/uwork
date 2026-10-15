@@ -1870,7 +1870,7 @@ export function SessionPage(props: SessionPageProps) {
               ) : null}
 
               {!props.primarySlot && !hasMainContentTakeover && !showDelayedSessionLoadingState && !canRenderReactSurface && !showStartupSkeleton ? (
-                <div className={`mx-auto max-w-[800px] px-6 max-lg:h-full max-lg:min-h-0 max-lg:w-full max-lg:px-0 max-lg:pt-0 ${showWorkspaceSetupEmptyState ? "pt-20" : "pt-10"}`}>
+                <div className={`mx-auto flex h-full min-h-0 w-full max-w-[800px] flex-col px-6 max-lg:h-full max-lg:min-h-0 max-lg:w-full max-lg:px-0 max-lg:pt-0 ${showWorkspaceSetupEmptyState ? "pt-20" : "pt-10"}`}>
                   {props.notFoundMessage ? (
                     <div className="px-6 py-16 text-center">
                       <div className="mx-auto max-w-md rounded-2xl border border-dls-border bg-dls-card px-5 py-6 shadow-[var(--dls-card-shadow)]">

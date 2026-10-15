@@ -207,7 +207,7 @@ export default {
   "composer.no_mcps": "此工作区中没有 MCP 服务器。",
   "composer.no_plugin_files": "此插件还没有 skills 或命令。",
   "composer.no_plugins": "你的库中还没有插件。",
-  "composer.placeholder": "描述你的任务…",
+  "composer.placeholder": "今天帮你做些什么？",
   "composer.plugin_files_unavailable": "插件文件不可用。",
   "composer.plus_agents": "智能体",
   "composer.plus_agents_commands": "智能体和命令",
