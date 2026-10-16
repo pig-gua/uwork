@@ -123,10 +123,10 @@ function DenSignedOutPanel({
             {t("den.signin_button")}
             <ArrowUpRight size={13} />
           </Button>
-          <Button variant="outline" onClick={() => onOpenBrowserAuth("sign-up")}>
+          {/* <Button variant="outline" onClick={() => onOpenBrowserAuth("sign-up")}>
             {t("den.create_account")}
             <ArrowUpRight size={13} />
-          </Button>
+          </Button> */}
         </div>
 
         {signinFallbackUrl ? <SignInFallbackNotice url={signinFallbackUrl} /> : null}
