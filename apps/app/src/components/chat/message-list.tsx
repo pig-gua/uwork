@@ -134,7 +134,7 @@ import { useSessionActivityStore, type SessionActivityStatus } from "@/react-app
 import { activeDelegatedTasks, hasNoNewActivity, lastTaskProgressAt } from "@/react-app/domains/session/status/session-progress"
 import { revalidateWorkspaceSessionSync } from "@/react-app/domains/session/sync/session-sync"
 import { useWorkspaceMaybe } from "@/react-app/shell/workspace-provider"
-import { formatElapsedSeconds, formatToolCallDuration } from "@/lib/tool-call-duration"
+import { formatElapsedSeconds, formatToolCallDuration, formatWorkedDuration } from "@/lib/tool-call-duration"
 import { collectLatestAssistantToolParts } from "@/lib/latest-assistant-tool-parts"
 import { isToolPartInFlight } from "@/lib/tool-activity"
 import { faviconUrlForHref } from "@/lib/favicon"
@@ -148,7 +148,7 @@ import { resolveConnectorToolIdentity } from "@/react-app/domains/connections/co
 const SEARCH_HIGHLIGHT_MARK_CLASS = "rounded px-0.5 bg-amber-4/70 text-current"
 
 /** Above this many step rows a finished turn folds into one summary line. */
-const COLLAPSED_STEP_RUN_MIN_ROWS = 4
+const COLLAPSED_STEP_RUN_MIN_ROWS = 0
 
 const AppCreationPartsContext = React.createContext<ReadonlySet<string>>(new Set())
 const ParentRunActiveContext = React.createContext(true)
@@ -1319,7 +1319,7 @@ function CompletedStepRun({ label, modelLabel, children }: { label: string; mode
       <div className="mx-auto flex w-full max-w-3xl px-2 md:px-10">
         <CollapsibleTrigger
           className="group flex cursor-pointer items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          aria-label={`${label}${modelLabel ? ` · ${modelLabel}` : ""}. ${open ? "Hide steps" : "Show steps"}`}
+          aria-label={`${label}${modelLabel ? ` · ${modelLabel}` : ""}. ${open ? t("chat.hide_steps") : t("chat.show_steps")}`}
           data-testid="completed-work-rail"
         >
           <ChevronRight
@@ -1452,7 +1452,9 @@ function MessageGroup({
 
   // The answer message's own thinking belongs to the work, not the answer, so
   // a collapsed run shows it and the message below renders text only.
-  const proseReasoning = proseItems.flatMap((item) =>
+  const intermediateProseItems = proseItems.length > 1 ? proseItems.slice(0, -1) : []
+  const visibleProseItems = proseItems.length > 1 ? proseItems.slice(-1) : proseItems
+  const proseReasoning = visibleProseItems.flatMap((item) =>
     item.message.role === "assistant" && !isSessionErrorMessage(item.message)
       ? getAssistantRenderGroups(item.message.parts, showThinking).flatMap((group, groupIndex) =>
         group.kind === "reasoning"
@@ -1477,16 +1479,14 @@ function MessageGroup({
     ) + proseReasoning.length
   const stepRunLabel =
     stepsStartedAt !== null && stepsEndedAt !== null && stepsEndedAt > stepsStartedAt
-      ? t("chat.worked_for", { duration: formatToolCallDuration(stepsEndedAt - stepsStartedAt) })
-      : stepRowCount === 1
-        ? "1 step"
-        : `${stepRowCount} steps`
+      ? t("chat.worked_for", { duration: formatWorkedDuration(stepsEndedAt - stepsStartedAt) })
+      : t("chat.steps_count", { count: stepRowCount })
   // A short finished run reads fine as a list, so only long ones fold away.
   const collapseSteps =
     !isLiveGroup && stepItems.length > 0 && stepRowCount > COLLAPSED_STEP_RUN_MIN_ROWS
   const replyStartedAt = stepsStartedAt ?? (lastRealItem ? getMessageCreated(lastRealItem.message) : null)
   const replySummaryLabel = replyStartedAt !== null && stepsEndedAt !== null && stepsEndedAt > replyStartedAt
-    ? `${t("chat.worked_for", { duration: formatToolCallDuration(stepsEndedAt - replyStartedAt) })}${stepRowCount ? ` · ${t("chat.steps_count", { count: stepRowCount })}` : ""}`
+    ? `${t("chat.worked_for", { duration: formatWorkedDuration(stepsEndedAt - replyStartedAt) })}${stepRowCount ? ` · ${t("chat.steps_count", { count: stepRowCount })}` : ""}`
     : stepRowCount ? stepRunLabel : ""
   const foldedReasoning = collapseSteps
     ? proseReasoning.map((reasoning) => (
@@ -1567,6 +1567,7 @@ function MessageGroup({
           <CompletedStepRun label={resolvedReplyModel ? replySummaryLabel : stepRunLabel} modelLabel={resolvedReplyModel}>
             <div className="flex flex-col gap-2">
               {renderItems(stepItems, 0)}
+              {renderItems(intermediateProseItems, stepItems.length)}
               {foldedReasoning}
             </div>
           </CompletedStepRun>
@@ -1578,7 +1579,12 @@ function MessageGroup({
       ) : null}
       {creationRuns.map(run => <Message key={`creation-${run.id}`} className="mx-auto flex w-full max-w-3xl flex-col px-2 md:px-10"><AppBuilderStep run={run} active={parentActive && isLastGroup && !readOnly && (run === creationRuns.at(-1) || Boolean(run.preparation && isToolPartInFlight(run.preparation)) || run.builds.some(isToolPartInFlight))} /></Message>)}
       {mcpAppParts.map(appFrame)}
-      {renderItems(proseItems, stepItems.length, collapseSteps)}
+      {collapseSteps ? (
+        <div className="mx-auto w-full max-w-3xl px-2 md:px-10" aria-hidden="true">
+          <div className="border-t border-dls-border" />
+        </div>
+      ) : null}
+      {renderItems(collapseSteps ? visibleProseItems : proseItems, stepItems.length, collapseSteps)}
       {lastTextMessage && !isStreaming && (
         <div className={cn("mx-auto flex w-full max-w-3xl flex-wrap items-center gap-2 px-2 transition-opacity duration-150 group-hover/message-group:opacity-100 max-lg:opacity-100 pointer-coarse:opacity-100 md:px-8", forkingMessageId && forkingMessageId === lastRealItem?.message.id ? "opacity-100" : "opacity-0")}>
           <MessageActions className="flex gap-0">

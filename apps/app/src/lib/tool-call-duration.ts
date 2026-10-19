@@ -1,3 +1,4 @@
+import { t } from "@/i18n"
 import type { DynamicToolUIPart, ToolUIPart } from "ai"
 
 // Relative so app-less evals specs can import this module without the app's
@@ -61,6 +62,18 @@ export function formatElapsedSeconds(seconds: number): string {
   if (seconds < 60) return `${seconds}s`
   const minutes = Math.floor(seconds / 60)
   return `${minutes}m ${seconds % 60}s`
+}
+
+export function formatWorkedDuration(ms: number): string {
+  const totalSeconds = Math.max(1, Math.round(ms / 1000))
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  const parts: string[] = []
+  if (hours > 0) parts.push(t("time.duration_hours", { count: hours }))
+  if (minutes > 0) parts.push(t("time.duration_minutes", { count: minutes }))
+  if (seconds > 0 || parts.length === 0) parts.push(t("time.duration_seconds", { count: seconds }))
+  return parts.join(" ")
 }
 
 export function formatToolCallDuration(ms: number): string {
