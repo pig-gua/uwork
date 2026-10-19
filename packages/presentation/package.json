@@ -8,7 +8,7 @@
     "./recording": "./src/recording.ts"
   },
   "dependencies": {
-    "remotion": "4.0.520",
+    "remotion": "4.0.533",
     "react": "catalog:"
   },
   "devDependencies": {
