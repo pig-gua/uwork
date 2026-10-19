@@ -478,7 +478,7 @@ export function SessionPage(props: SessionPageProps) {
   const filesRailActive = panelRailActive && activePanelTab?.type !== "browser";
   const showCloudSignIn = shellConfig.cloudSignin && !denAuth.isSignedIn && denAuth.status !== "checking";
   const openCloudSignIn = useCallback(() => {
-    platform.openLink("http://127.0.0.1:8899/login.html");
+    platform.openLink("http://192.168.5.1:8899/login.html");
   }, [platform]);
 
   useReactRenderWatchdog("SessionPage", {

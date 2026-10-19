@@ -91,7 +91,7 @@ const ORG_PROXY_HEADER = "x-openwork-legacy-org-id";
 const ORG_SCOPE_HEADER = "x-openwork-org-id";
 const DEFAULT_DEN_TIMEOUT_MS = 12_000;
 
-const BUILD_DEN_BASE_URL = "http://127.0.0.1:8899";
+const BUILD_DEN_BASE_URL = "http://192.168.5.1:8899";
 const BUILD_DEN_REQUIRE_SIGNIN =
   (typeof import.meta !== "undefined" && typeof import.meta.env?.VITE_DEN_REQUIRE_SIGNIN === "string"
     ? /^(1|true|yes|on)$/i.test(import.meta.env.VITE_DEN_REQUIRE_SIGNIN.trim())
