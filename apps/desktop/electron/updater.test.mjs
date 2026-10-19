@@ -132,7 +132,7 @@ describe("targetedStableUpdaterFeed", () => {
   it("builds a fixed GitHub release feed from a strict stable version", () => {
     assert.equal(
       targetedStableUpdaterFeed("0.17.22", "0.17.23"),
-      "https://github.com/different-ai/openwork/releases/download/v0.17.23",
+      "http://192.168.5.1:8899/updates/v0.17.23",
     );
   });
 
@@ -161,7 +161,7 @@ describe("targetedStableUpdaterFeed", () => {
   it("allows only an explicit exact recovery downgrade", () => {
     assert.equal(
       targetedStableUpdaterFeed("0.17.23", "0.17.22", true),
-      "https://github.com/different-ai/openwork/releases/download/v0.17.22",
+      "http://192.168.5.1:8899/updates/v0.17.22",
     );
     assert.throws(
       () => targetedStableUpdaterFeed("0.17.23", "0.17.23", true),
@@ -237,8 +237,8 @@ describe("recovery metadata and candidates", () => {
   it("accepts only the exact platform, architecture, distribution release artifact", () => {
     const files = [
       { url: "openwork-mac-x64-1.2.3.dmg", sha512: "wrong-arch" },
-      { url: "https://tampered.invalid/openwork-mac-arm64-1.2.3.dmg", sha512: "tampered" },
-      { url: "openwork-mac-arm64-1.2.3.dmg", sha512: "verified" },
+      { url: "https://tampered.invalid/uwork-mac-arm64-1.2.3.dmg", sha512: "tampered" },
+      { url: "uwork-mac-arm64-1.2.3.dmg", sha512: "verified" },
     ];
     assert.deepEqual(selectRecoveryArtifact(files, {
       version: "1.2.3",
@@ -250,7 +250,7 @@ describe("recovery metadata and candidates", () => {
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "https://github.com/different-ai/openwork/releases/download/v1.2.3/openwork-mac-arm64-1.2.3.dmg",
+      url: "http://192.168.5.1:8899/updates/v1.2.3/uwork-mac-arm64-1.2.3.dmg",
       sha512: "verified",
     });
     assert.equal(selectRecoveryArtifact(files, {
@@ -263,15 +263,15 @@ describe("recovery metadata and candidates", () => {
 
   it("accepts each artifact flavor only for its matching distribution", () => {
     const artifacts = {
-      public: "openwork-mac-arm64-1.2.3.dmg",
-      cloud: "openwork-cloud-mac-arm64-1.2.3.dmg",
-      enterprise: "openwork-enterprise-mac-arm64-1.2.3.dmg",
+      public: "uwork-mac-arm64-1.2.3.dmg",
+      cloud: "uwork-cloud-mac-arm64-1.2.3.dmg",
+      enterprise: "uwork-enterprise-mac-arm64-1.2.3.dmg",
     };
     for (const [distribution, fileName] of Object.entries(artifacts)) {
       const files = [{ url: fileName, sha512: `${distribution}-checksum` }];
       assert.equal(selectRecoveryArtifact(files, {
         version: "1.2.3", platform: "darwin", arch: "arm64", distribution,
-      })?.url, `https://github.com/different-ai/openwork/releases/download/v1.2.3/${fileName}`);
+      })?.url, `http://192.168.5.1:8899/updates/v1.2.3/${fileName}`);
       for (const otherDistribution of Object.keys(artifacts).filter((flavor) => flavor !== distribution)) {
         assert.equal(selectRecoveryArtifact(files, {
           version: "1.2.3", platform: "darwin", arch: "arm64", distribution: otherDistribution,
@@ -283,14 +283,14 @@ describe("recovery metadata and candidates", () => {
   it("parses representative builder manifests and selects published installer extensions", () => {
     const files = parseRecoveryManifest(`version: 1.2.3
 files:
-  - url: openwork-mac-arm64-1.2.3.dmg
+  - url: uwork-mac-arm64-1.2.3.dmg
     sha512: mac-checksum
     size: 100
-  - url: openwork-cloud-win-x64-1.2.3.exe
+  - url: uwork-cloud-win-x64-1.2.3.exe
     sha512: win-checksum
-  - url: openwork-enterprise-linux-x86_64-1.2.3.AppImage
+  - url: uwork-enterprise-linux-x86_64-1.2.3.AppImage
     sha512: linux-checksum
-path: openwork-mac-arm64-1.2.3.zip
+path: uwork-mac-arm64-1.2.3.zip
 sha512: updater-zip-checksum
 releaseDate: '2026-08-11T00:00:00.000Z'
 `);
@@ -314,7 +314,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       await assert.rejects(
         cacheVerifiedRecoveryArtifact({
           app: { getPath: () => userData },
-          artifact: { url: "https://github.com/different-ai/openwork/releases/download/v1.2.3/openwork.dmg", sha512: "invalid" },
+          artifact: { url: "http://192.168.5.1:8899/updates/v1.2.3/openwork.dmg", sha512: "invalid" },
           fetchArtifact: async () => new Response("tampered"),
         }),
         /checksum did not match/,
@@ -333,7 +333,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "https://github.com/different-ai/openwork/releases/download/v1.2.3/openwork-mac-arm64-1.2.3.dmg",
+      url: "http://192.168.5.1:8899/updates/v1.2.3/uwork-mac-arm64-1.2.3.dmg",
       sha512: createHash("sha512").update(bytes).digest("base64"),
     };
     try {
@@ -369,7 +369,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "https://github.com/different-ai/openwork/releases/download/v0.18.18/openwork-mac-arm64-0.18.18.dmg",
+      url: "http://192.168.5.1:8899/updates/v0.18.18/uwork-mac-arm64-0.18.18.dmg",
       sha512: createHash("sha512").update(bytes).digest("base64"),
     };
     const expected = { platform: "darwin", arch: "arm64", distribution: "public" };
@@ -401,7 +401,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "https://github.com/different-ai/openwork/releases/download/v1.9.0/openwork-mac-arm64-1.9.0.dmg",
+      url: "http://192.168.5.1:8899/updates/v1.9.0/uwork-mac-arm64-1.9.0.dmg",
       sha512: createHash("sha512").update(bytes).digest("base64"),
     };
     const handlers = new Map();
@@ -450,7 +450,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
     const handlers = new Map();
     const destructiveCalls = [];
     let candidateFetches = 0;
-    const manifest = (checksum) => `version: 1.9.0\nfiles:\n  - url: openwork-mac-arm64-1.9.0.dmg\n    sha512: ${checksum}\n`;
+    const manifest = (checksum) => `version: 1.9.0\nfiles:\n  - url: uwork-mac-arm64-1.9.0.dmg\n    sha512: ${checksum}\n`;
     try {
       isolatedUpdaterImportId += 1;
       const isolated = await import(`./updater.mjs?fresh-mismatch=${isolatedUpdaterImportId}`);
@@ -813,7 +813,7 @@ describe("metadata-only updater checks", () => {
       const check = handlers.get("openwork:updater:check");
       assert.equal((await check(null, "alpha")).available, true);
       assert.deepEqual(await handlers.get("openwork:updater:download")(), { ok: true });
-      assert.equal(downloadFeeds.at(-1).url, "https://github.com/different-ai/openwork/releases/download/alpha-macos-latest");
+      assert.equal(downloadFeeds.at(-1).url, "http://192.168.5.1:8899/updates/alpha");
       const nativeFeed = nativeUpdater.getFeedURL();
       const autoInstall = updater.autoInstallOnAppQuit;
       updater.checkForUpdates = async () => ({ updateInfo: { version: "0.18.0-alpha.2966" } });
@@ -837,9 +837,9 @@ describe("metadata-only updater checks", () => {
 describe("updater artifact metadata size", () => {
   const files = [
     { url: "openwork-mac-x64-0.17.1.dmg", size: 900 },
-    { url: "openwork-mac-arm64-0.17.1.dmg", size: 800 },
+    { url: "uwork-mac-arm64-0.17.1.dmg", size: 800 },
     { url: "openwork-mac-x64-0.17.1.zip", size: 700 },
-    { url: "openwork-mac-arm64-0.17.1.zip", size: 600 },
+    { url: "uwork-mac-arm64-0.17.1.zip", size: 600 },
   ];
   for (const { arm64, runningUnderARM64Translation, totalBytes } of [
     { arm64: true, runningUnderARM64Translation: false, totalBytes: 600 },
@@ -1054,7 +1054,7 @@ describe("release channel changes", () => {
 
   it("pins enterprise builds to their parallel stable manifest channel", async () => {
     const handlers = new Map();
-    const userData = await mkdtemp(path.join(os.tmpdir(), "openwork-enterprise-updater-"));
+    const userData = await mkdtemp(path.join(os.tmpdir(), "uwork-enterprise-updater-"));
     try {
       registerUpdaterIpc({
         app: {
@@ -1071,7 +1071,7 @@ describe("release channel changes", () => {
       assert.equal(typeof setChannel, "function");
       assert.deepEqual(await setChannel(null, "alpha"), {
         channel: "stable",
-        feedUrl: "https://github.com/different-ai/openwork/releases/latest/download",
+        feedUrl: "http://192.168.5.1:8899/updates/stable",
         currentVersion: desktopVersion,
       });
     } finally {
@@ -1112,7 +1112,7 @@ describe("release channel changes", () => {
       assert.deepEqual(await download(), { ok: true });
       assert.equal(
         downloadFeeds.at(-1)?.url,
-        "https://github.com/different-ai/openwork/releases/download/alpha-macos-latest",
+        "http://192.168.5.1:8899/updates/alpha",
       );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
@@ -1160,7 +1160,7 @@ describe("release channel changes", () => {
       );
       assert.equal(
         feeds.at(-1)?.url,
-        "https://github.com/different-ai/openwork/releases/download/alpha-macos-latest",
+        "http://192.168.5.1:8899/updates/alpha",
       );
     } finally {
       await rm(tempDir, { recursive: true, force: true });

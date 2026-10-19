@@ -44,8 +44,8 @@ export function resolveAppVersion(app) {
   return _cachedAppVersion;
 }
 const ELECTRON_UPDATER_FEEDS = Object.freeze({
-  stable: "https://github.com/different-ai/openwork/releases/latest/download",
-  alpha: "https://github.com/different-ai/openwork/releases/download/alpha-macos-latest",
+  stable: "http://192.168.5.1:8899/updates/stable",
+  alpha: "http://192.168.5.1:8899/updates/alpha",
 });
 
 function normalizeElectronUpdaterChannel(value, manifestChannel = "latest") {
@@ -87,7 +87,7 @@ function electronUpdaterFeedUrl(channel, manifestChannel = "latest") {
 function normalizeStableTargetVersion(value) {
   if (typeof value !== "string") return null;
   const normalized = value.trim().replace(/^v/i, "");
-  return /^\d+\.\d+\.\d+$/.test(normalized) ? normalized : null;
+  return /^\d+\.\d+\.\d+(-\d+)?$/.test(normalized) ? normalized : null;
 }
 
 function parseComparableVersion(value) {
@@ -176,7 +176,7 @@ export function targetedStableUpdaterFeed(currentVersion, targetVersion, allowOl
       ? "Recovery target version must differ from the installed version."
       : "Target update version must be newer than the installed version.");
   }
-  return `https://github.com/different-ai/openwork/releases/download/v${normalizedTarget}`;
+  return `http://192.168.5.1:8899/updates/v${normalizedTarget}`;
 }
 
 function updaterChannelState(app, channel, targetVersion = null, manifestChannel = "latest") {
@@ -465,7 +465,7 @@ export function registerUpdaterIpc({
   async function resolveRecoveryArtifact(version) {
     if (!electronNet?.fetch) return null;
     try {
-      const manifestUrl = `https://github.com/different-ai/openwork/releases/download/v${version}/${recoveryManifestName(platform, arch, distribution)}`;
+      const manifestUrl = `http://192.168.5.1:8899/updates/v${version}/${recoveryManifestName(platform, arch, distribution)}`;
       const response = await electronNet.fetch(manifestUrl, { headers: { Accept: "text/yaml, text/plain, */*" } });
       if (!response.ok) return null;
       return selectRecoveryArtifact(parseRecoveryManifest(await response.text()), {

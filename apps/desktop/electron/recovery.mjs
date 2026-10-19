@@ -4,7 +4,7 @@ import path from "node:path";
 
 const RECOVERY_STATE_FILENAME = "app-recovery.v1.json";
 const RECOVERY_CACHE_DIRECTORY = "app-recovery-cache";
-const STABLE_VERSION = /^\d+\.\d+\.\d+$/;
+const STABLE_VERSION = /^\d+\.\d+\.\d+(-\d+)?$/;
 
 function stableVersion(value) {
   if (typeof value !== "string") return null;
@@ -103,13 +103,13 @@ function validRecoveryArtifactIdentity(artifact) {
   } catch {
     return false;
   }
-  const prefix = `/different-ai/openwork/releases/download/v${version}/`;
-  if (url.protocol !== "https:" || url.hostname !== "github.com" || !url.pathname.startsWith(prefix)) return false;
+  const prefix = `/updates/v${version}/`;
+  if (url.protocol !== "http:" || url.hostname !== "192.168.5.1" || !url.pathname.startsWith(prefix)) return false;
   const assetArch = artifact.platform === "linux" && artifact.arch === "x64" ? "x86_64" : artifact.arch;
   const platformSlug = artifact.platform === "darwin" ? "mac" : artifact.platform === "win32" ? "win" : "linux";
   const fileName = path.basename(url.pathname);
   const distributionSlug = artifact.distribution === "public" ? "" : `${artifact.distribution}-`;
-  return fileName === `openwork-${distributionSlug}${platformSlug}-${assetArch}-${version}${installerExtension(artifact.platform)}`;
+  return fileName === `uwork-${distributionSlug}${platformSlug}-${assetArch}-${version}${installerExtension(artifact.platform)}`;
 }
 
 export function selectRecoveryArtifact(files, { version, platform, arch, distribution }) {
@@ -124,10 +124,10 @@ export function selectRecoveryArtifact(files, { version, platform, arch, distrib
     && typeof file.sha512 === "string"
     && file.sha512.trim(),
   );
-  const baseUrl = `https://github.com/different-ai/openwork/releases/download/v${normalizedVersion}/`;
+  const baseUrl = `http://192.168.5.1:8899/updates/v${normalizedVersion}/`;
   for (const selected of matching) {
     const url = new URL(selected.url, baseUrl);
-    if (url.origin !== "https://github.com" || !url.pathname.startsWith(`/different-ai/openwork/releases/download/v${normalizedVersion}/`)) {
+    if (url.origin !== "http://192.168.5.1:8899" || !url.pathname.startsWith(`/updates/v${normalizedVersion}/`)) {
       continue;
     }
     const artifact = {

@@ -83,7 +83,7 @@ function releasePart(value: string): number[] | null {
 
 function normalizeStableDesktopVersion(value: string): string | null {
   const normalized = value.trim().replace(/^v/i, "");
-  return /^\d+\.\d+\.\d+$/.test(normalized) ? normalized : null;
+  return /^\d+\.\d+\.\d+(-\d+)?$/.test(normalized) ? normalized : null;
 }
 
 /**
