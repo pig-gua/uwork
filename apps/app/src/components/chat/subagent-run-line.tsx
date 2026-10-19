@@ -113,7 +113,7 @@ export function SubagentRunLine({ part, className, parentActive = true }: Subage
     const interval = window.setInterval(update, 1000)
     return () => window.clearInterval(interval)
   }, [inFlight, startedAt, part.toolCallId, syncDegraded])
-  const title = part.input?.description?.trim().slice(0, 160) || "Sub-agent task"
+  const title = part.input?.description?.trim().slice(0, 160) || t("chat.subagent_task")
   // A helper the person stopped is not a failure (DESIGN.md C5): say "Stopped".
   const errorText = part.state === "output-error" ? part.errorText : undefined
   const stopped = isFailed && (stoppedByPerson.current || /abort|interrupt|cancel/i.test(errorText ?? ""))
@@ -121,25 +121,25 @@ export function SubagentRunLine({ part, className, parentActive = true }: Subage
   const status = permissionPending
     ? t("session.subagent_permission_needed")
     : questionPending ? t("session.subagent_question_pending")
-    : activity === "retrying" ? "Retrying"
-    : activity === "failed" ? (stopped ? "Stopped" : "Task reported an error")
-    : activity === "waiting-result" ? "Waiting for task result"
-    : activity === "waiting-start" ? "Waiting for task update"
-    : activity === "no-new-activity" ? "Still working — waiting for updates"
+    : activity === "retrying" ? t("chat.subagent_retrying")
+    : activity === "failed" ? (stopped ? t("chat.subagent_stopped") : t("chat.subagent_error"))
+    : activity === "waiting-result" ? t("chat.subagent_waiting_result")
+    : activity === "waiting-start" ? t("chat.subagent_waiting_start")
+    : activity === "no-new-activity" ? t("chat.subagent_no_new_activity")
     : inFlight
     ? syncDegraded
-      ? "Connection lost — reconnecting…"
-      : `Working ${formatElapsedSeconds(elapsedSeconds)}`
+      ? t("chat.subagent_reconnecting")
+      : t("chat.working", { elapsed: formatElapsedSeconds(elapsedSeconds) })
     : isFailed
-      ? "Task failed"
-      : "Completed"
+      ? t("chat.subagent_failed")
+      : t("chat.subagent_completed")
 
   const lines = (
     <>
       <span className="flex min-w-0 items-center gap-2">
         <span className={cn("min-w-0 truncate", activity === "shimmer" && "ow-text-shimmer")}>
           {title}
-          <span className="text-muted-foreground/70"> · {agent} agent</span>
+          <span className="text-muted-foreground/70"> · {t("chat.agent_suffix", { agent })}</span>
         </span>
         {permissionPending ? (
           <ShieldAlert

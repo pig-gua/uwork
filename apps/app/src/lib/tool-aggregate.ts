@@ -1,4 +1,5 @@
 import type { DynamicToolUIPart, ToolUIPart } from "ai"
+import { t } from "@/i18n"
 
 import {
   isApplyPatchToolPart,
@@ -84,10 +85,6 @@ function filePathOf(part: AnyToolPart): string | null {
   return typeof value === "string" && value ? value : null
 }
 
-function plural(count: number, singular: string, pluralForm = `${singular}s`): string {
-  return `${count} ${count === 1 ? singular : pluralForm}`
-}
-
 export function getAggregateCountSummary(parts: AnyToolPart[]): string {
   const commands = parts.filter((part) => getToolFamily(part) === "command").length
   const editPaths = new Set<string>()
@@ -112,11 +109,11 @@ export function getAggregateCountSummary(parts: AnyToolPart[]): string {
   }
 
   const pieces: string[] = []
-  if (editCalls > 0) pieces.push(plural(editPaths.size > 0 ? editPaths.size : editCalls, "file edit"))
-  if (commands > 0) pieces.push(plural(commands, "command"))
-  if (readCalls > 0) pieces.push(plural(readPaths.size > 0 ? readPaths.size : readCalls, "file read"))
-  if (searches > 0) pieces.push(plural(searches, "search", "searches"))
-  return pieces.join(", ")
+  if (editCalls > 0) pieces.push(t("tool.agg_count_edits", { count: editPaths.size > 0 ? editPaths.size : editCalls }))
+  if (commands > 0) pieces.push(t("tool.agg_count_commands", { count: commands }))
+  if (readCalls > 0) pieces.push(t("tool.agg_count_reads", { count: readPaths.size > 0 ? readPaths.size : readCalls }))
+  if (searches > 0) pieces.push(t("tool.agg_count_searches", { count: searches }))
+  return pieces.join(t("tool.agg_join"))
 }
 
 /**
@@ -149,22 +146,20 @@ export function getAggregateSummary(parts: AnyToolPart[], tense: "present" | "pa
   const pieces: string[] = []
   if (editCalls > 0) {
     const count = editPaths.size > 0 ? editPaths.size : editCalls
-    pieces.push(`${tense === "past" ? "edited" : "editing"} ${plural(count, "file")}`)
+    pieces.push(t(tense === "past" ? "tool.agg_edit_past" : "tool.agg_edit_present", { count }))
   }
   if (commands > 0) {
-    pieces.push(commands === 1
-      ? `${tense === "past" ? "ran" : "running"} command`
-      : `${tense === "past" ? "ran" : "running"} ${commands} commands`)
+    pieces.push(t(tense === "past" ? "tool.agg_cmd_past" : "tool.agg_cmd_present", { count: commands }))
   }
   if (readCalls > 0) {
     const count = readPaths.size > 0 ? readPaths.size : readCalls
-    pieces.push(`${tense === "past" ? "read" : "reading"} ${plural(count, "file")}`)
+    pieces.push(t(tense === "past" ? "tool.agg_read_past" : "tool.agg_read_present", { count }))
   }
   if (searches > 0) {
-    pieces.push(`${tense === "past" ? "ran" : "running"} ${plural(searches, "search", "searches")}`)
+    pieces.push(t(tense === "past" ? "tool.agg_search_past" : "tool.agg_search_present", { count: searches }))
   }
 
-  const joined = pieces.join(", ")
+  const joined = pieces.join(t("tool.agg_join"))
   return joined.charAt(0).toUpperCase() + joined.slice(1)
 }
 
@@ -181,9 +176,9 @@ export function getAggregateRowFile(part: AnyToolPart): { verb: string; path: st
   const running = isToolPartInFlight(part)
   const path = filePathOf(part)
   if (!path) return null
-  if (isEditToolPart(part)) return { verb: running ? "Editing" : "Edited", path }
-  if (isWriteToolPart(part)) return { verb: running ? "Writing" : "Wrote", path }
-  if (isReadToolPart(part)) return { verb: running ? "Reading" : "Read", path }
+  if (isEditToolPart(part)) return { verb: running ? t("tool.verb_editing") : t("tool.verb_edited"), path }
+  if (isWriteToolPart(part)) return { verb: running ? t("tool.verb_writing") : t("tool.verb_wrote"), path }
+  if (isReadToolPart(part)) return { verb: running ? t("tool.verb_reading") : t("tool.verb_read"), path }
   return null
 }
 
@@ -205,8 +200,8 @@ export function getAggregateRowSearch(
   const scope = [path, include].filter(Boolean).join(" · ")
   return {
     verb: grep
-      ? (running ? "Searching code" : "Searched code")
-      : (running ? "Searching files" : "Searched files"),
+      ? (running ? t("tool.verb_searching_code") : t("tool.verb_searched_code"))
+      : (running ? t("tool.verb_searching_files") : t("tool.verb_searched_files")),
     pattern,
     scope: scope || null,
   }

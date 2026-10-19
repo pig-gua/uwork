@@ -3,6 +3,7 @@ import { CodeXml, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
+import { t } from "@/i18n";
 
 /**
  * One presentation for task failures, interruptions and engine-owned retries:
@@ -49,9 +50,9 @@ export function TaskRecovery(props: {
         {props.description ? <span className="min-w-0 text-xs leading-6 text-muted-foreground">{props.description}</span> : null}
         <div className="flex shrink-0 items-center gap-1 text-foreground">
           {props.onRetry ? (
-            <Button variant="ghost" size="xs" aria-label={props.retryLabel ?? "Retry task"} title={props.retryLabel ?? "Retry task"}
+            <Button variant="ghost" size="xs" aria-label={props.retryLabel ?? t("chat.retry_task")} title={props.retryLabel ?? t("chat.retry_task")}
               data-testid={props.retryTestId} disabled={props.retryDisabled} onClick={props.onRetry}>
-              Retry
+              {t("chat.retry")}
             </Button>
           ) : null}
           {props.actions}
@@ -61,7 +62,7 @@ export function TaskRecovery(props: {
                 "text-muted-foreground transition-opacity duration-150 motion-reduce:transition-none",
                 open ? "opacity-100" : "opacity-0 group-hover/recovery:opacity-100 group-focus-within/recovery:opacity-100 pointer-coarse:opacity-100",
               )}
-              render={<Button variant={open ? "secondary" : "ghost"} size="icon-xs" aria-label="Technical details" title="Technical details" />}>
+              render={<Button variant={open ? "secondary" : "ghost"} size="icon-xs" aria-label={t("chat.technical_details")} title={t("chat.technical_details")} />}>
               <CodeXml aria-hidden="true" />
             </CollapsibleTrigger>
           ) : null}
@@ -73,7 +74,7 @@ export function TaskRecovery(props: {
           <pre className="max-h-60 min-w-0 flex-1 overflow-auto whitespace-pre-wrap break-words font-mono text-xs leading-5">{details}</pre>
           <Button size="xs" variant="ghost" className="shrink-0" onClick={() => {
             void navigator.clipboard.writeText(details).then(() => setCopied(true)).catch(() => {});
-          }}>{copied ? "Copied" : "Copy"}</Button>
+          }}>{copied ? t("chat.copied") : t("chat.copy")}</Button>
         </div>
       </CollapsibleContent> : null}
     </Collapsible>

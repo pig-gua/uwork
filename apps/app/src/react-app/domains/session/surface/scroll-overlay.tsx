@@ -3,6 +3,7 @@ import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isDesktopRuntime } from "@/app/lib/runtime-env";
+import { t } from "@/i18n";
 
 import {
   selectSessionIsStickyBottom,
@@ -35,7 +36,7 @@ const JumpToStartButton = memo(function JumpToStartButton({
       className="rounded-full px-3 py-1.5 text-xs text-dls-text transition-colors hover:bg-dls-hover"
       onClick={handleClick}
     >
-      Jump to start
+      {t("chat.jump_to_start")}
     </button>
   );
 });
@@ -57,7 +58,7 @@ const JumpToLatestButton = memo(function JumpToLatestButton({
       className="rounded-full px-3 py-1.5 text-xs text-dls-text transition-colors hover:bg-dls-hover"
       onClick={handleClick}
     >
-      Jump to latest
+      {t("chat.jump_to_latest")}
     </button>
   );
 });
@@ -92,7 +93,7 @@ export const SessionScrollOverlay = memo(function SessionScrollOverlay({
           onClick={() => onJumpToLatest(window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth")}
         >
           <ArrowDown aria-hidden strokeWidth={1.5} />
-          <span className="sr-only">Jump to latest</span>
+          <span className="sr-only">{t("chat.jump_to_latest")}</span>
         </Button>
       </div>
     );

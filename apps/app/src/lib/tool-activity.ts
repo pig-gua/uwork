@@ -1,4 +1,5 @@
 import type { DynamicToolUIPart, ToolUIPart } from "ai"
+import { t } from "@/i18n"
 import {
   isApplyPatchToolPart,
   isBashToolPart,
@@ -41,57 +42,57 @@ function hostnameOf(url: string | undefined): string | undefined {
 export function getToolActivityLabel(part: AnyToolPart): string {
   if (isBashToolPart(part)) {
     const description = part.input?.description?.trim()
-    return description ? truncateText(description, 64) : "Running a command"
+    return description ? truncateText(description, 64) : t("tool.running_command")
   }
   if (isReadToolPart(part)) {
-    return `Reading ${parseFilename(part.input?.filePath)}`
+    return t("tool.reading_file", { file: parseFilename(part.input?.filePath) })
   }
   if (isEditToolPart(part)) {
-    return `Editing ${parseFilename(part.input?.filePath)}`
+    return t("tool.editing_file", { file: parseFilename(part.input?.filePath) })
   }
   if (isWriteToolPart(part)) {
-    return `Writing ${parseFilename(part.input?.filePath)}`
+    return t("tool.writing_file", { file: parseFilename(part.input?.filePath) })
   }
   if (isApplyPatchToolPart(part)) {
-    return "Applying changes"
+    return t("tool.applying_changes")
   }
   if (isGrepToolPart(part) || isGlobToolPart(part)) {
     const pattern = part.input?.pattern?.trim()
     return pattern
-      ? `Searching for ${truncateText(pattern, 44)}`
-      : "Searching files"
+      ? t("tool.searching_for", { pattern: truncateText(pattern, 44) })
+      : t("tool.searching_files")
   }
   if (isLspToolPart(part)) {
-    return `Inspecting ${parseFilename(part.input?.filePath)}`
+    return t("tool.inspecting_file", { file: parseFilename(part.input?.filePath) })
   }
   if (isSkillToolPart(part)) {
     const name = part.input?.name?.trim()
-    return name ? `Loading ${name} skill` : "Loading a skill"
+    return name ? t("tool.loading_skill", { name }) : t("tool.loading_a_skill")
   }
   if (isTodoWriteToolPart(part)) {
-    return "Updating the plan"
+    return t("tool.updating_plan")
   }
   if (isWebFetchToolPart(part)) {
     const host = hostnameOf(part.input?.url)
-    return host ? `Reading ${host}` : "Fetching a page"
+    return host ? t("tool.reading_host", { host }) : t("tool.fetching_page")
   }
   if (isWebSearchToolPart(part)) {
     const query = part.input?.query?.trim()
     return query
-      ? `Searching the web for ${truncateText(query, 44)}`
-      : "Searching the web"
+      ? t("tool.searching_web_for", { query: truncateText(query, 44) })
+      : t("tool.searching_web")
   }
   if (isQuestionToolPart(part)) {
-    return "Asking a question"
+    return t("tool.asking_question")
   }
   if (isTaskToolPart(part)) {
     const description = part.input?.description?.trim()
     return description
-      ? `Agent: ${truncateText(description, 56)}`
-      : "Running an agent"
+      ? t("tool.agent_running", { description: truncateText(description, 56) })
+      : t("tool.running_agent")
   }
   if (part.type === "dynamic-tool") {
-    return `Running ${part.toolName.replace(/[_-]+/g, " ")}`
+    return t("tool.running_dynamic", { name: part.toolName.replace(/[_-]+/g, " ") })
   }
-  return "Working"
+  return t("tool.working")
 }

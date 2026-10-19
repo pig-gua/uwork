@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/collapsible"
 import { MessageContent } from "@/components/ui/message"
 import { cn } from "@/lib/utils"
+import { t } from "@/i18n"
 
 type ReasoningBlockProps = {
   text: string
@@ -30,7 +31,7 @@ export function ReasoningBlock({ text, isStreaming, className, disclosureKey }: 
     <Collapsible open={open} onOpenChange={setOpen} className={cn("w-full", className)} data-reasoning-block="">
       <CollapsibleTrigger className="group flex cursor-pointer items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
         <span className={cn(isStreaming && "animate-pulse")}>
-          {isStreaming ? "Thinking…" : "Thought"}
+          {isStreaming ? t("chat.thinking") : t("chat.thought")}
         </span>
         <ChevronDown
           aria-hidden="true"

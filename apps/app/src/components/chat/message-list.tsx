@@ -275,7 +275,7 @@ const ToolMessageInner = ({ part }: ToolMessageProps) => {
       <div className="text-sm text-muted-foreground" data-tool-lifecycle="unknown">
         {part.type === "dynamic-tool" ? (
           <CapabilityCallLine part={part} connector={resolveConnectorToolIdentity(part, connectorIdentities)} statusUnknown />
-        ) : "Tool activity — status unavailable"}
+        ) : t("chat.tool_activity_unavailable")}
       </div>
     )
   }
@@ -549,7 +549,7 @@ function CopyMessageButton({ messages }: CopyMessageButtonProps) {
   }
 
   return (
-    <MessageAction tooltip={copied ? "Copied!" : "Copy"}>
+    <MessageAction tooltip={copied ? t("chat.copied") : t("chat.copy")}>
       <Button
         variant="ghost"
         size="icon"
@@ -977,7 +977,7 @@ const UserMessage = React.memo(
                     <MessageTimestamp message={message} className="mr-1.5" />
                     <CopyMessageButton messages={[message]} />
                     {messageText ? (
-                      <MessageAction tooltip="Edit message">
+                      <MessageAction tooltip={t("chat.edit_message")}>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -989,7 +989,7 @@ const UserMessage = React.memo(
                         </Button>
                       </MessageAction>
                     ) : null}
-                    <MessageAction tooltip={branching ? "Branching..." : "Branch in new chat"}>
+                    <MessageAction tooltip={branching ? t("chat.branching") : t("chat.branch_in_new_chat")}>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -1002,11 +1002,11 @@ const UserMessage = React.memo(
                       </Button>
                     </MessageAction>
                     {branching ? <span role="status" className="sr-only">Branching...</span> : null}
-                    <MessageAction tooltip="Revert">
+                    <MessageAction tooltip={t("chat.revert")}>
                       <Button
                         variant="ghost"
                         size="icon"
-                        aria-label="Revert"
+                        aria-label={t("chat.revert")}
                         disabled={readOnly}
                         onClick={() => onRevertToUserMessage(message.id)}
                       >
@@ -1041,7 +1041,7 @@ const MessageComponent = React.memo(
       if (presentation?.autoAccessWall) return <TranscriptAutoAccessNotice wall={presentation.autoAccessWall} />
       return (
         <ErrorMessage
-          error={getMessagesText([message]) || "Session failed"}
+          error={getMessagesText([message]) || t("chat.session_failed")}
           description={presentation?.description}
           showDescriptionOnResume={presentation?.kind !== "aborted" && presentation?.kind !== "provider-timeout"}
           resumePrompt={presentation?.recoveryPrompt}
@@ -1089,7 +1089,7 @@ MessageComponent.displayName = "MessageComponent"
 const LoadingMessage = React.memo(({ elapsedSeconds, starting }: { elapsedSeconds: number; starting: boolean }) => (
     <Message className="mx-auto flex w-full max-w-3xl flex-col items-start gap-2 px-2 md:px-10">
       <div role={starting ? "status" : undefined} data-loading-message={starting ? "starting" : "working"} className="py-1 text-sm text-muted-foreground">
-        <span className="ow-text-shimmer tabular-nums">{starting ? "Starting…" : `Working ${formatElapsedSeconds(elapsedSeconds)}`}</span>
+        <span className="ow-text-shimmer tabular-nums">{starting ? t("chat.starting") : t("chat.working", { elapsed: formatElapsedSeconds(elapsedSeconds) })}</span>
       </div>
     </Message>
 ))
@@ -1171,7 +1171,7 @@ function ErrorMessage({ error, description, showDescriptionOnResume, resumePromp
   const displayDetails = selection?.technicalDetails ?? technicalDetails
   const resumable = Boolean(resumePrompt && onResumeInterrupted)
   return (
-    <TaskRecovery title={displayError ?? "Task failed"} state={resumable ? "paused" : "failed"}
+    <TaskRecovery title={displayError ?? t("chat.task_failed")} state={resumable ? "paused" : "failed"}
       testId={resumable ? "session-error-interrupted" : undefined}
       description={showDescriptionOnResume && displayDescription
         ? <span data-testid="session-error-interruption-warning">{displayDescription}</span>
@@ -1227,9 +1227,9 @@ const RetryMessage = React.memo(({ status }: RetryMessageProps) => {
 
   return (
     <TaskRecovery state="retrying" testId="session-retrying"
-      title={reconnecting ? "Reconnecting to the model"
-        : `${(freeModelLimit ? "The free starter model is busy right now" : action?.title ?? presentation.title).replace(/[.!?…]+$/, "")}. Retrying…`}
-      description={freeModelLimit ? "To keep working now, connect your own model provider." : reconnecting ? progress : action?.message}
+      title={reconnecting ? t("chat.reconnecting_model")
+        : `${(freeModelLimit ? t("chat.free_model_busy") : action?.title ?? presentation.title).replace(/[.!?…]+$/, "")}${t("chat.retry_suffix")}`}
+      description={freeModelLimit ? t("chat.connect_provider_to_continue") : reconnecting ? progress : action?.message}
       technicalDetails={[info, presentation.technicalDetails].join("\n")}
       actions={freeModelLimit ? <Button variant="ghost" size="xs"
         onClick={() => dispatchAction({ target: "settings", action: "open", section: "providers" })}>Connect a model provider</Button>
@@ -1477,7 +1477,7 @@ function MessageGroup({
     ) + proseReasoning.length
   const stepRunLabel =
     stepsStartedAt !== null && stepsEndedAt !== null && stepsEndedAt > stepsStartedAt
-      ? `Worked for ${formatToolCallDuration(stepsEndedAt - stepsStartedAt)}`
+      ? t("chat.worked_for", { duration: formatToolCallDuration(stepsEndedAt - stepsStartedAt) })
       : stepRowCount === 1
         ? "1 step"
         : `${stepRowCount} steps`
@@ -1486,7 +1486,7 @@ function MessageGroup({
     !isLiveGroup && stepItems.length > 0 && stepRowCount > COLLAPSED_STEP_RUN_MIN_ROWS
   const replyStartedAt = stepsStartedAt ?? (lastRealItem ? getMessageCreated(lastRealItem.message) : null)
   const replySummaryLabel = replyStartedAt !== null && stepsEndedAt !== null && stepsEndedAt > replyStartedAt
-    ? `Worked for ${formatToolCallDuration(stepsEndedAt - replyStartedAt)}${stepRowCount ? ` · ${stepRowCount} ${stepRowCount === 1 ? "step" : "steps"}` : ""}`
+    ? `${t("chat.worked_for", { duration: formatToolCallDuration(stepsEndedAt - replyStartedAt) })}${stepRowCount ? ` · ${t("chat.steps_count", { count: stepRowCount })}` : ""}`
     : stepRowCount ? stepRunLabel : ""
   const foldedReasoning = collapseSteps
     ? proseReasoning.map((reasoning) => (
@@ -1585,11 +1585,11 @@ function MessageGroup({
             <CopyMessageButton messages={renderableItems.map((item) => item.message)} />
             {lastRealItem ? (
               <>
-                <MessageAction tooltip={forkingMessageId === lastRealItem.message.id ? "Branching..." : "Branch in new chat"}>
+                <MessageAction tooltip={forkingMessageId === lastRealItem.message.id ? t("chat.branching") : t("chat.branch_in_new_chat")}>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label={forkingMessageId === lastRealItem.message.id ? "Branching..." : "Branch in new chat"}
+                    aria-label={forkingMessageId === lastRealItem.message.id ? t("chat.branching") : t("chat.branch_in_new_chat")}
                     aria-busy={forkingMessageId === lastRealItem.message.id || undefined}
                     disabled={Boolean(forkingMessageId)}
                     onClick={() => onForkAtMessage(lastRealItem.message.id)}
@@ -1597,12 +1597,12 @@ function MessageGroup({
                     {forkingMessageId === lastRealItem.message.id ? <LoaderCircle className="motion-safe:animate-spin" /> : <Split className="rotate-90" />}
                   </Button>
                 </MessageAction>
-                {forkingMessageId === lastRealItem.message.id ? <span role="status" className="sr-only">Branching...</span> : null}
-                <MessageAction tooltip="Revert">
+                {forkingMessageId === lastRealItem.message.id ? <span role="status" className="sr-only">{t("chat.branching")}</span> : null}
+                <MessageAction tooltip={t("chat.revert")}>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="Revert"
+                    aria-label={t("chat.revert")}
                     disabled={readOnly}
                     onClick={() => onRevertToUserMessage(lastRealItem.message.id)}
                   >
@@ -1821,7 +1821,7 @@ export function MessageList({ messages, messageIdReplacements, status, activityS
         }}
       >
         {!runActive && backgroundCount > 0 && <div data-background-agents className="flex items-center gap-3 px-3 py-2 text-sm text-muted-foreground md:px-5">
-          <span>{syncDegraded ? "Background activity — reconnecting…" : `${backgroundCount} ${backgroundCount === 1 ? "agent" : "agents"} running`}</span>
+          <span>{syncDegraded ? t("chat.background_reconnecting") : t("chat.agents_running", { count: backgroundCount })}</span>
           {/* Stops only the background helpers; the chat itself is already idle. */}
           {onStopSubagentSession && !syncDegraded ? (
             <button
@@ -1836,7 +1836,7 @@ export function MessageList({ messages, messageIdReplacements, status, activityS
                   .finally(() => setStoppingBackground(false))
               }}
             >
-              {stoppingBackground ? "Stopping…" : backgroundCount === 1 ? "Stop" : "Stop all"}
+              {stoppingBackground ? t("chat.stopping") : backgroundCount === 1 ? t("chat.stop") : t("chat.stop_all")}
             </button>
           ) : null}
         </div>}
