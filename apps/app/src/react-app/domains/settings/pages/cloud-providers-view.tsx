@@ -232,8 +232,8 @@ export function CloudProvidersView({
     const notice = (
       <section className="flex flex-col gap-3" aria-labelledby="ai-providers-organization">
         <div className="space-y-1">
-          <h2 id="ai-providers-organization" className="text-base font-medium text-dls-text">From your organization</h2>
-          <p className="text-sm text-muted-foreground">Providers your team pays for, delivered through the UWork Gateway. Nothing to set up on this device.</p>
+          <h2 id="ai-providers-organization" className="text-base font-medium text-dls-text">{t("cloud_providers.org_section_title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("cloud_providers.org_section_desc")}</p>
         </div>
         <div className="flex flex-col gap-4 rounded-2xl border border-dashed border-dls-border px-5 py-5 sm:flex-row sm:items-center">
           <div className="flex shrink-0 items-center -space-x-2" aria-hidden>
@@ -241,10 +241,10 @@ export function CloudProvidersView({
             <span className="flex size-8 items-center justify-center rounded-full border border-dls-border bg-dls-hover text-[11px] font-medium text-muted-foreground">+2</span>
           </div>
           <div className="min-w-0 flex-1 space-y-0.5">
-            <h3 className="text-sm font-medium text-dls-text">No organization yet</h3>
-            <p className="text-sm text-muted-foreground">Sign in to see what your organization already provides. Your keys on this device keep working either way.</p>
+            <h3 className="text-sm font-medium text-dls-text">{t("cloud_providers.no_org_title")}</h3>
+            <p className="text-sm text-muted-foreground">{t("cloud_providers.no_org_desc")}</p>
           </div>
-          <Button variant="outline" className="shrink-0 self-start sm:self-center" onClick={onOpenAccount}>Sign in to OpenWork</Button>
+          <Button variant="outline" className="shrink-0 self-start sm:self-center" onClick={onOpenAccount}>{t("cloud_providers.sign_in_uwork")}</Button>
         </div>
       </section>
     );
