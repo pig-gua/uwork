@@ -1,10 +1,10 @@
 extends: ./electron-builder.base.yml
-appId: com.differentai.openwork
-productName: OpenWork
+appId: com.psbc.uwork
+productName: UWork
 protocols:
-  - name: OpenWork
+  - name: UWork
     schemes:
       - uwork
 linux:
-  executableName: openwork
-artifactName: openwork-${os}-${arch}-${version}.${ext}
+  executableName: uwork
+artifactName: uwork-${os}-${arch}-${version}.${ext}
