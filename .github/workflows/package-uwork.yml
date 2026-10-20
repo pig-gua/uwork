@@ -101,6 +101,7 @@ jobs:
             apps/desktop/dist-electron/*.AppImage
             apps/desktop/dist-electron/*.deb
             apps/desktop/dist-electron/*.rpm
+            apps/desktop/dist-electron/*.blockmap
             apps/desktop/dist-electron/latest*.yml
           if-no-files-found: warn
           retention-days: 14
