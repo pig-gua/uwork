@@ -44,8 +44,8 @@ export function resolveAppVersion(app) {
   return _cachedAppVersion;
 }
 const ELECTRON_UPDATER_FEEDS = Object.freeze({
-  stable: "http://192.168.5.1:8899/updates/stable",
-  alpha: "http://192.168.5.1:8899/updates/alpha",
+  stable: "https://uwork.abaaba.cloud/updates/stable",
+  alpha: "https://uwork.abaaba.cloud/updates/alpha",
 });
 
 function normalizeElectronUpdaterChannel(value, manifestChannel = "latest") {
@@ -176,7 +176,7 @@ export function targetedStableUpdaterFeed(currentVersion, targetVersion, allowOl
       ? "Recovery target version must differ from the installed version."
       : "Target update version must be newer than the installed version.");
   }
-  return `http://192.168.5.1:8899/updates/v${normalizedTarget}`;
+  return `https://uwork.abaaba.cloud/updates/v${normalizedTarget}`;
 }
 
 function updaterChannelState(app, channel, targetVersion = null, manifestChannel = "latest") {
@@ -465,7 +465,7 @@ export function registerUpdaterIpc({
   async function resolveRecoveryArtifact(version) {
     if (!electronNet?.fetch) return null;
     try {
-      const manifestUrl = `http://192.168.5.1:8899/updates/v${version}/${recoveryManifestName(platform, arch, distribution)}`;
+      const manifestUrl = `https://uwork.abaaba.cloud/updates/v${version}/${recoveryManifestName(platform, arch, distribution)}`;
       const response = await electronNet.fetch(manifestUrl, { headers: { Accept: "text/yaml, text/plain, */*" } });
       if (!response.ok) return null;
       return selectRecoveryArtifact(parseRecoveryManifest(await response.text()), {

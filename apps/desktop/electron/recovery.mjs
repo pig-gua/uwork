@@ -104,7 +104,7 @@ function validRecoveryArtifactIdentity(artifact) {
     return false;
   }
   const prefix = `/updates/v${version}/`;
-  if (url.protocol !== "http:" || url.hostname !== "192.168.5.1" || !url.pathname.startsWith(prefix)) return false;
+  if (url.protocol !== "https:" || url.hostname !== "uwork.abaaba.cloud" || !url.pathname.startsWith(prefix)) return false;
   const assetArch = artifact.platform === "linux" && artifact.arch === "x64" ? "x86_64" : artifact.arch;
   const platformSlug = artifact.platform === "darwin" ? "mac" : artifact.platform === "win32" ? "win" : "linux";
   const fileName = path.basename(url.pathname);
@@ -124,10 +124,10 @@ export function selectRecoveryArtifact(files, { version, platform, arch, distrib
     && typeof file.sha512 === "string"
     && file.sha512.trim(),
   );
-  const baseUrl = `http://192.168.5.1:8899/updates/v${normalizedVersion}/`;
+  const baseUrl = `https://uwork.abaaba.cloud/updates/v${normalizedVersion}/`;
   for (const selected of matching) {
     const url = new URL(selected.url, baseUrl);
-    if (url.origin !== "http://192.168.5.1:8899" || !url.pathname.startsWith(`/updates/v${normalizedVersion}/`)) {
+    if (url.origin !== "https://uwork.abaaba.cloud" || !url.pathname.startsWith(`/updates/v${normalizedVersion}/`)) {
       continue;
     }
     const artifact = {

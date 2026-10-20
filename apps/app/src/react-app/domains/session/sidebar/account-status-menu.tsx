@@ -59,9 +59,9 @@ import {
   useOpenWorkModelsPromoEligibility,
 } from "../../cloud/openwork-models-promo";
 
-const DOCS_URL = "http://192.168.5.1:8899/docs.html";
-const FAQ_URL = "http://192.168.5.1:8899/faq.html";
-const LOGIN_URL = "http://192.168.5.1:8899/login.html";
+const DOCS_URL = "https://uwork.abaaba.cloud/docs.html";
+const FAQ_URL = "https://uwork.abaaba.cloud/faq.html";
+const LOGIN_URL = "https://uwork.abaaba.cloud/login.html";
 const BOOT_STARTED_AT = Date.now();
 const INITIALIZING_MS = 15_000;
 

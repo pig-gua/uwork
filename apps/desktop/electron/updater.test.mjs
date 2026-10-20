@@ -132,7 +132,7 @@ describe("targetedStableUpdaterFeed", () => {
   it("builds a fixed GitHub release feed from a strict stable version", () => {
     assert.equal(
       targetedStableUpdaterFeed("0.17.22", "0.17.23"),
-      "http://192.168.5.1:8899/updates/v0.17.23",
+      "https://uwork.abaaba.cloud/updates/v0.17.23",
     );
   });
 
@@ -161,7 +161,7 @@ describe("targetedStableUpdaterFeed", () => {
   it("allows only an explicit exact recovery downgrade", () => {
     assert.equal(
       targetedStableUpdaterFeed("0.17.23", "0.17.22", true),
-      "http://192.168.5.1:8899/updates/v0.17.22",
+      "https://uwork.abaaba.cloud/updates/v0.17.22",
     );
     assert.throws(
       () => targetedStableUpdaterFeed("0.17.23", "0.17.23", true),
@@ -250,7 +250,7 @@ describe("recovery metadata and candidates", () => {
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "http://192.168.5.1:8899/updates/v1.2.3/uwork-mac-arm64-1.2.3.dmg",
+      url: "https://uwork.abaaba.cloud/updates/v1.2.3/uwork-mac-arm64-1.2.3.dmg",
       sha512: "verified",
     });
     assert.equal(selectRecoveryArtifact(files, {
@@ -271,7 +271,7 @@ describe("recovery metadata and candidates", () => {
       const files = [{ url: fileName, sha512: `${distribution}-checksum` }];
       assert.equal(selectRecoveryArtifact(files, {
         version: "1.2.3", platform: "darwin", arch: "arm64", distribution,
-      })?.url, `http://192.168.5.1:8899/updates/v1.2.3/${fileName}`);
+      })?.url, `https://uwork.abaaba.cloud/updates/v1.2.3/${fileName}`);
       for (const otherDistribution of Object.keys(artifacts).filter((flavor) => flavor !== distribution)) {
         assert.equal(selectRecoveryArtifact(files, {
           version: "1.2.3", platform: "darwin", arch: "arm64", distribution: otherDistribution,
@@ -314,7 +314,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       await assert.rejects(
         cacheVerifiedRecoveryArtifact({
           app: { getPath: () => userData },
-          artifact: { url: "http://192.168.5.1:8899/updates/v1.2.3/openwork.dmg", sha512: "invalid" },
+          artifact: { url: "https://uwork.abaaba.cloud/updates/v1.2.3/openwork.dmg", sha512: "invalid" },
           fetchArtifact: async () => new Response("tampered"),
         }),
         /checksum did not match/,
@@ -333,7 +333,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "http://192.168.5.1:8899/updates/v1.2.3/uwork-mac-arm64-1.2.3.dmg",
+      url: "https://uwork.abaaba.cloud/updates/v1.2.3/uwork-mac-arm64-1.2.3.dmg",
       sha512: createHash("sha512").update(bytes).digest("base64"),
     };
     try {
@@ -369,7 +369,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "http://192.168.5.1:8899/updates/v0.18.18/uwork-mac-arm64-0.18.18.dmg",
+      url: "https://uwork.abaaba.cloud/updates/v0.18.18/uwork-mac-arm64-0.18.18.dmg",
       sha512: createHash("sha512").update(bytes).digest("base64"),
     };
     const expected = { platform: "darwin", arch: "arm64", distribution: "public" };
@@ -401,7 +401,7 @@ releaseDate: '2026-08-11T00:00:00.000Z'
       platform: "darwin",
       arch: "arm64",
       distribution: "public",
-      url: "http://192.168.5.1:8899/updates/v1.9.0/uwork-mac-arm64-1.9.0.dmg",
+      url: "https://uwork.abaaba.cloud/updates/v1.9.0/uwork-mac-arm64-1.9.0.dmg",
       sha512: createHash("sha512").update(bytes).digest("base64"),
     };
     const handlers = new Map();
@@ -813,7 +813,7 @@ describe("metadata-only updater checks", () => {
       const check = handlers.get("openwork:updater:check");
       assert.equal((await check(null, "alpha")).available, true);
       assert.deepEqual(await handlers.get("openwork:updater:download")(), { ok: true });
-      assert.equal(downloadFeeds.at(-1).url, "http://192.168.5.1:8899/updates/alpha");
+      assert.equal(downloadFeeds.at(-1).url, "https://uwork.abaaba.cloud/updates/alpha");
       const nativeFeed = nativeUpdater.getFeedURL();
       const autoInstall = updater.autoInstallOnAppQuit;
       updater.checkForUpdates = async () => ({ updateInfo: { version: "0.18.0-alpha.2966" } });
@@ -1071,7 +1071,7 @@ describe("release channel changes", () => {
       assert.equal(typeof setChannel, "function");
       assert.deepEqual(await setChannel(null, "alpha"), {
         channel: "stable",
-        feedUrl: "http://192.168.5.1:8899/updates/stable",
+        feedUrl: "https://uwork.abaaba.cloud/updates/stable",
         currentVersion: desktopVersion,
       });
     } finally {
@@ -1112,7 +1112,7 @@ describe("release channel changes", () => {
       assert.deepEqual(await download(), { ok: true });
       assert.equal(
         downloadFeeds.at(-1)?.url,
-        "http://192.168.5.1:8899/updates/alpha",
+        "https://uwork.abaaba.cloud/updates/alpha",
       );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
@@ -1160,7 +1160,7 @@ describe("release channel changes", () => {
       );
       assert.equal(
         feeds.at(-1)?.url,
-        "http://192.168.5.1:8899/updates/alpha",
+        "https://uwork.abaaba.cloud/updates/alpha",
       );
     } finally {
       await rm(tempDir, { recursive: true, force: true });

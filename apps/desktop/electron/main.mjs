@@ -157,8 +157,8 @@ if (BLANK_SLATE_LAUNCH.enabled || process.env.OPENWORK_ELECTRON_USE_MOCK_KEYCHAI
   // system keychain normally.
   app.commandLine.appendSwitch("use-mock-keychain");
 }
-const RELEASE_DOWNLOAD_BASE_URL = "http://192.168.5.1:8899/updates/stable";
-const RELEASE_PAGE_URL = "http://192.168.5.1:8899/updates";
+const RELEASE_DOWNLOAD_BASE_URL = "https://uwork.abaaba.cloud/updates/stable";
+const RELEASE_PAGE_URL = "https://uwork.abaaba.cloud/updates";
 const DOCS_PAGE_URL = "https://openworklabs.com/docs";
 const applicationMenu = createApplicationMenu({
   appName: APP_NAME,
